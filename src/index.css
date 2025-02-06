@@ -4,6 +4,7 @@
   margin: 0;
 }
 
+
 :root {
   --primeira-cor: #f80;
   --seconda-cor: #00498d;
@@ -42,17 +43,22 @@ input[type="search"] {
 /* NAV */
 
 .nav {
-  
-  background: linear-gradient(to right, #ffffff, #cde4ff);
+  background: linear-gradient(to right, #ff8800, #1a1a1a);
   padding: 1rem;
   position: sticky;
   top: 0;
   left: 0;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   z-index: 100;
-  font-size: 18px; /* Aumenta o tamanho da fonte do menu */
+  font-size: 18px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  color: white; /* Garante contraste */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease-in-out;
 }
+
+
 
 .nav .inner-content {
   display: flex;
@@ -66,15 +72,18 @@ input[type="search"] {
 
 /* LOGO */
 .logo {
-  color: rgb(255, 123, 0);
+ 
+  font-family: 'Rajdhani', sans-serif;
+  text-transform: uppercase;
+  color: black;
   font-weight: bold;
-  font-size: 1.5rem; /* Tamanho aumentado para a logo */
+  font-size: 2.5rem; /* Tamanho aumentado para a logo */
   display: flex;
   align-items: center;
 }
 
 .logo span {
-  color: var(--corpreta);
+  color: var(--luzcor);
   margin-left: 0.3rem;
   font-weight: bold;
   font-size: 1.5rem; /* Destaque maior */
@@ -83,8 +92,8 @@ input[type="search"] {
 }
 
 
-.logo:hover span {
-  color: #4a90e2; /* Mudança de cor ao passar o mouse */
+.logo:hover {
+  color: black; /* Mudança de cor ao passar o mouse */
   transform: scale(1.05); /* Leve aumento para destacar */
 }
 
@@ -105,7 +114,7 @@ nav ul li {
 /* Estilo do link para remover sublinhado e ajustar cor inicial */
 nav ul li a {
   text-decoration: none;
-  color: var(--corpreta);
+  color: white;
   font-size: 18px; /* Tamanho da fonte menor */
   display: flex;
   align-items: center;
@@ -115,7 +124,7 @@ nav ul li a {
 
 /* Efeito hover no item de menu */
 nav ul li:hover {
-  background-color: #4a90e2; /* Azul gelo */
+  background-color: #ffca7f; /* Azul gelo */
   border-radius: 5px; /* Bordas arredondadas para efeito mais suave */
 }
 
@@ -127,7 +136,7 @@ nav ul li:hover a .fa-icon {
 /* Estilo do ícone do FontAwesome */
 .fa-icon {
   transition: transform 0.5s ease; /* Animação suave */
-  color: #333;
+  color: white;
 }
 
 /* Alteração da cor do link ao passar o mouse */
@@ -148,6 +157,7 @@ nav ul li:hover a {
 
 .navs-icon-conteiner .Shopping-Cart {
   position: relative;
+  color: white;
 }
 
 .navs-icon-conteiner .Shopping-Cart .produto-Count {
@@ -172,7 +182,7 @@ nav ul li:hover a {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  border-bottom: 1px solid var(--corpreta);
+  border-bottom: 1px solid white;
   padding: 0.5rem;
   margin-right: 1rem;
 }
@@ -181,6 +191,7 @@ nav ul li:hover a {
 .search-input-container input {
   width: 150px; /* Diminui a largura do campo de pesquisa */
   border: none;
+  font-weight: bold;
   outline: none;
   background-color: transparent;
 }
@@ -188,7 +199,7 @@ nav ul li:hover a {
 /* Diminui o tamanho do ícone de pesquisa */
 .search-input-container svg {
   height: 1rem; /* Diminui o ícone */
-  color: #808080;
+  color: #d6d6d6;
 }
 
 nav ul li:hover {
@@ -202,7 +213,7 @@ nav ul li:hover {
 }
 
 .icon-cinza {
-  color: gray;
+  color: rgb(255, 255, 255);
 }
 
 .menu-button {
@@ -216,8 +227,8 @@ nav ul li:hover {
 }
 
 .disabled-link button {
-  background-color: #ccc;
-  color: var(--corpreta);
+  background-color: #7d7c7c;
+  color: rgb(255, 255, 255);
   font-weight: bold;
   font-size: 18px;
   border: none;
@@ -232,14 +243,14 @@ nav ul li:hover {
 }
 
 .disabled-link button:hover {
-  background-color: #ccc; /* Nenhuma mudança na cor ao passar o mouse */
+  background-color: #ffc671; /* Nenhuma mudança na cor ao passar o mouse */
   transform: none; /* Retira o efeito de transformação */
   border-radius: 15px;
 }
 
 /* Botão habilitado com o carrinho com produtos */
 nav ul li button {
-  color: var(--corpreta);
+  color: white;
   font-weight: bold;
   font-size: 18px;
   cursor: pointer;
@@ -277,10 +288,14 @@ header .banner-slide .inner-content {
   align-items: center;
   padding: 2rem;
   border-radius: 15px;
-  background: linear-gradient(135deg, #87CEEB, #4a90e2);
+  background: linear-gradient(135deg, #ff8800, #1a1a1a);
   overflow: hidden;
   animation: fadeIn 1s ease-in-out;
+  box-shadow: 0px 4px 10px rgba(255, 136, 0, 0.3);
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease-in-out;
 }
+
 
 header .banner-slide .left-side {
   color: #fff;
@@ -522,7 +537,7 @@ header .banner-slide .right-side img:hover {
   text-align: center;
   font-size: 3rem;
   font-weight: bold;
-  color: #87CEEB;
+  color: #ebaf87;
   margin-bottom: 0.5rem;
   position: relative;
 }
@@ -532,7 +547,7 @@ header .banner-slide .right-side img:hover {
   min-width: 200px;
   max-width: 200px;
   padding: 0.5rem;
-  border: 5px double #87CEEB;
+  border: 5px double #ebaf87;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -563,7 +578,7 @@ header .banner-slide .right-side img:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 102, 255, 0.2); /* Efeito dourado suave */
+  background: rgba(255, 128, 0, 0.2); /* Efeito dourado suave */
   filter: blur(6px); /* Cria o brilho difuso */
   z-index: -1;
   opacity: 0;
@@ -577,7 +592,7 @@ header .banner-slide .right-side img:hover {
 .selecao-titulo .underline {
   width: 80px;
   height: 3px;
-  background-color: #87CEEB;;
+  background-color: #ebb787;;
   margin: 0 auto 1rem auto; /* Centraliza */
   border-radius: 1.5px; /* Deixa a linha mais elegante */
 }
@@ -671,7 +686,7 @@ header .banner-slide .right-side img:hover {
   align-items: center;
   gap: 0.25rem;
   padding: 0.8rem;
-  background-color: var(--segundopreto);
+  background-color: var(--primeira-cor);
   color: #fff;
   border-radius: 8px;
   font-size: 1rem;
@@ -679,17 +694,17 @@ header .banner-slide .right-side img:hover {
 }
 
 .Lista .btn-icon:hover {
-  background-color: #005f73;
+  background-color: black;
   transform: scale(1.05);
 }
 
 .add-to-cart-btn {
-  background-color: #87CEEB;
+  background-color: var(--primeiropreto);
   color: #000;
 }
 
 .add-to-cart-btn:hover {
-  background-color: #005f73;
+  background-color: black;
   color: #fff;
 }
 
@@ -715,7 +730,7 @@ header .banner-slide .right-side img:hover {
   margin: 0 0.3rem;
   border: none;
   border-radius: 10px;
-  background-color: var(--segundopreto);
+  background-color: var(--primeiropreto);
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
@@ -728,7 +743,7 @@ header .banner-slide .right-side img:hover {
 }
 
 .pagination-button:hover:not(:disabled) {
-  background-color: var(--corpreta);
+  background-color: black;
 }
 
 .pagination span {
@@ -776,7 +791,7 @@ header .banner-slide .right-side img:hover {
 
 /* Menu categorias abaixo do navbar */
 .menu-categorias {
-  background-color: #34495e; /* Cor de fundo escura, mais suave */
+  background-color: #5e4934; /* Cor de fundo escura, mais suave */
   padding: 8px 20px; 
   position: fixed;
   top: 60px; /* Ajuste para ficar logo abaixo do navbar */
@@ -817,7 +832,7 @@ header .banner-slide .right-side img:hover {
 
 /* Categoria selecionada */
 .menu-categorias ul li.selected {
-  background-color: #2980b9; /* Azul para a categoria selecionada */
+  background-color: #b97629; /* Azul para a categoria selecionada */
   color: #ffffff;
   font-weight: bold;
 }
@@ -854,22 +869,22 @@ header .banner-slide .right-side img:hover {
 .selecao-titulo h3 {
   text-align: center;
   font-size: 2rem;
-  color: #000080; /* Azul-marinho */
+  color: black; /* Azul-marinho */
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .selecao-titulo .underline {
   width: 100px;
   height: 3px;
-  background-color: #000;
+  background-color: #a64a0d;
   margin: 0 auto 1rem auto; /* Centraliza a underline */
 }
 
 /* final lista produto */
 
 .sessao-exclusiva {
-  background: linear-gradient(135deg, #87CEEB, #4a90e2);
+  background: linear-gradient(135deg, #ff8800, #1a1a1a);
   width: 100vw;
   margin-left: calc((100vw - 100%) / -2);
   padding: 5rem 1rem;
@@ -919,7 +934,7 @@ header .banner-slide .right-side img:hover {
 }
 
 .btnveragora1 {
-  background-color:var(--segundopreto);
+  background-color: var(--primeira-cor);
   padding: 0.8rem 1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -930,7 +945,7 @@ header .banner-slide .right-side img:hover {
 }
 
 .btnveragora1:hover {
-  background-color: #005f73;
+  background-color: black;
   transform: translateX(5px);
 }
 
@@ -973,7 +988,7 @@ header .banner-slide .right-side img:hover {
 }
 
 .comentario .rate {
-  color: #e07800;
+  color: #e0d500;
 }
 
 .comentario:hover {
@@ -983,7 +998,7 @@ header .banner-slide .right-side img:hover {
 .comentario p:first-child {
   font-weight: bold;
   font-size: 2rem; /* Ajusta o tamanho do texto */
-  color: var(--seconda-cor);
+  color: var(--primeira-cor);
   margin-top: 1rem;
   line-height: 2rem;
 }
@@ -1011,7 +1026,7 @@ header .banner-slide .right-side img:hover {
 
 /* Início Rodapé */
 footer {
-  background-color: #00498d;
+  background-color: #000000;
   color: #fff;
   width: 100vw; /* Define a largura para ocupar toda a viewport */
   margin-left: calc((100vw - 100%) / -2); /* Corrige o alinhamento */
@@ -1083,10 +1098,20 @@ footer .copyright {
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  box-shadow: 5px 5px 50px var(--seconda-cor);
+  box-shadow: 5px 5px 50px var(--corpreta);
   height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
+}
+
+.sidebar-cart .total-container{
+color: black;
+margin-top: 1rem;
+}
+
+.sidebar-cart .lista-produto-carinho{
+ color: black;
+ 
 }
 
 .sidebar-cart::-webkit-scrollbar {
@@ -1123,7 +1148,7 @@ footer .copyright {
   flex-direction: column;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--luzcor);
+  border-bottom: 1px solid var(--corpreta);
 }
 
 .total-conteiner {
@@ -1134,7 +1159,7 @@ footer .copyright {
 }
 
 .btn-icon {
-  background-color: var(--seconda-cor);
+  background-color: var(--primeira-cor);
   color: #fff;
   text-align: center;
   padding: 0.75rem 1rem;
@@ -1149,7 +1174,7 @@ footer .copyright {
 }
 
 .btn-icon:hover {
-  background-color: darken(var(--seconda-cor), 10%);
+  background-color: darken(var(--primeira-cor), 10%);
 }
 
 /* Estilo do texto "Seu Carinho está vazio" */
@@ -1230,16 +1255,19 @@ footer .copyright {
   align-items: center;
   gap: 0.25rem;
   padding: 0.8rem;
-  background-color: var(--segundopreto);
+  background-color: var(--primeira-cor);
   color: #fff;
+  font-weight: bold;
   border-radius: 8px;
   font-size: 1rem;
+  margin-top: 1rem;
+  margin-left: 7rem;
   transition: all 0.2s;
 }
 
 
 .btn-icon1:hover {
-  background-color: #005f73; /* Cor de fundo ao passar o mouse */
+  background-color: black; /* Cor de fundo ao passar o mouse */
   transition: color 0.3s; /* Transição suave na cor */
 }
 
@@ -1253,7 +1281,7 @@ footer .copyright {
   display: block; /* Para permitir centralização */
   margin: 20px auto; /* Margem superior/inferior de 20px e centraliza horizontalmente */
   padding: 10px 40px; /* Espaçamento interno do botão */
-  background-color: var(--segundopreto); /* Cor de fundo inicial (azul) */
+  background-color: var(--primeira-cor); /* Cor de fundo inicial (azul) */
   color: white; /* Cor do texto */
   border: none; /* Sem borda */
   border-radius: 5px; /* Bordas arredondadas */
@@ -1264,7 +1292,7 @@ footer .copyright {
 }
 
 .btnvermais:hover {
-  background-color: #005f73; /* Cor de fundo ao passar o mouse */
+  background-color: black; /* Cor de fundo ao passar o mouse */
 }
 
 .btnvermais .svg-inline--fa {
@@ -1386,9 +1414,10 @@ footer .copyright {
 
 .pagamento-buscar-cep-btn,
 .pagamento-calcular-frete-btn {
-  background-color: #5C6BC0;
+  background-color: var(--primeira-cor);
   color: white;
   border: none;
+  font-weight: bold;
   padding: 12px 20px;
   font-size: 14px;
   border-radius: 8px;
@@ -1401,7 +1430,7 @@ footer .copyright {
 
 .pagamento-buscar-cep-btn:hover,
 .pagamento-calcular-frete-btn:hover {
-  background-color: #3f4f96;
+  background-color: black;
 }
 
 .pagamento-metodos {
@@ -1438,12 +1467,12 @@ footer .copyright {
 
 .pagamento-metodos input[type="radio"]:checked + label {
   font-weight: bold;
-  color: #007bff;
+  color: #ff9500;
 }
 
 .pagamento-finalizar-compra-btn {
   display: inline-block;
-  background-color: var(--segundopreto);
+  background-color: var(--primeira-cor);
   color: #fff;
   padding: 15px 20px;
   border: none;
@@ -1458,7 +1487,7 @@ footer .copyright {
 }
 
 .pagamento-finalizar-compra-btn:hover {
-  background-color: #0d6c89;
+  background-color: black;
 }
 
 /* Fim Pagamento */
@@ -1557,7 +1586,7 @@ footer .copyright {
 
 .loading-circle {
   border: 8px solid #f3f3f3; /* Cor de fundo */
-  border-top: 8px solid #3498db; /* Cor da bolinha */
+  border-top: 8px solid #db7434; /* Cor da bolinha */
   border-radius: 50%;
   width: 50px; /* Tamanho da bolinha */
   height: 50px; /* Tamanho da bolinha */
@@ -1597,7 +1626,7 @@ footer .copyright {
 /* Título do login */
 .login-title {
   font-size: 24px;
-  color: #2a5298;
+  color: var(--primeiropreto);
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -1615,7 +1644,7 @@ footer .copyright {
 
 /* Efeito de foco nos inputs */
 .login-input:focus {
-  border-color: #1e3c72;
+  border-color: #e0931f;
   outline: none;
 }
 
@@ -1624,7 +1653,7 @@ footer .copyright {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
-  background-color: #2a5298;
+  background-color: var(--primeira-cor);
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -1636,7 +1665,7 @@ footer .copyright {
 
 /* Efeito ao passar o mouse sobre o botão */
 .login-button:hover {
-  background-color: #1e3c72;
+  background-color: black;
 }
 
 /* Desabilitar botão quando em carregamento */
@@ -1662,7 +1691,7 @@ footer .copyright {
 /* Estilo do botão de cadastro */
 .go-to-cadastro {
   font-size: 14px;
-  color: #2a5298;
+  color: var(--primeira-cor);
   margin-top: 20px;
   background: none;
   border: none;
@@ -1676,7 +1705,7 @@ footer .copyright {
 }
 
 .go-to-cadastro:hover {
-  color: #2a5298;
+  color: #98632a;
   font-weight: bold;
 }
 
@@ -1711,7 +1740,7 @@ footer .copyright {
 
 /* Efeito ao passar o mouse sobre o botão */
 .registro button:hover {
-  background-color: #2a5298; /* Cor mais clara ao passar o mouse */
+  background-color: black; /* Cor mais clara ao passar o mouse */
 }
 
 /* Estilo do link de login */
@@ -1723,7 +1752,7 @@ footer .copyright {
 }
 
 .registro a {
-  color: #1e3c72;
+  color: var(--primeiropreto);
   text-decoration: none;
   font-weight: bold;
 }
@@ -1764,12 +1793,13 @@ footer .copyright {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   margin-top: 20px;
+  font-weight: bold;
 }
 
 /* Título do registro */
 .registro h2 {
   font-size: 35px; /* Tamanho de fonte menor */
-  color: #1e3c72; /* Azul marinho */
+  color: var(--primeira-cor); /* Azul marinho */
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
@@ -1795,7 +1825,7 @@ footer .copyright {
 
 /* Efeito de foco nos inputs */
 .registro input:focus {
-  border-color: #1e3c72; /* Cor azul marinho no foco */
+  border-color: var(--primeira-cor); /* Cor azul marinho no foco */
   outline: none;
 }
 
@@ -1803,8 +1833,9 @@ footer .copyright {
 .registro button {
   width: 100%; /* O botão ocupa toda a largura do contêiner */
   padding: 10px;
-  background-color: #1e3c72; /* Azul marinho */
+  background-color: var(--primeira-cor); /* Azul marinho */
   color: #fff;
+  font-weight: bold;
   border: none;
   border-radius: 5px;
   font-size: 16px;
@@ -1814,7 +1845,7 @@ footer .copyright {
 
 /* Estilo do link para login */
 .registro .login-register a {
-  color: #1e3c72;
+  color: #72421e;
   text-decoration: none;
   font-weight: bold;
 }
@@ -1919,12 +1950,12 @@ footer .copyright {
 }
 
 .produto-info .btn-produto button {
-  background-color: var(--segundopreto);
+  background-color: var(--primeira-cor);
   color: white;
   padding: 12px 20px;
   font-size: 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1933,7 +1964,7 @@ footer .copyright {
 }
 
 .produto-info .btn-produto button:hover {
-  background-color: #005f73;
+  background-color: black;
 }
 
 .produto-info .btn-produto .btn-icon {
@@ -1943,11 +1974,11 @@ footer .copyright {
 }
 
 .produto-info .btn-produto .add-to-cart-btn {
-  background-color: var(--segundopreto);
+  background-color: var(--primeira-cor);
 }
 
 .produto-info .btn-produto .add-to-cart-btn:hover {
-  background-color: #005f73;
+  background-color: black;
 }
 
 .produto-info .btn-produto .btn-icon span {
@@ -2057,7 +2088,7 @@ footer .copyright {
 .sobre-nos {
   text-align: center;
   padding: 3rem 1.5rem;
-  background: linear-gradient(to right, hsl(206, 66%, 88%), #60a9fc); 
+  background: linear-gradient(to right, #ff8800, #1a1a1a);
   color: #fff;
   font-family: "Arial", sans-serif;
   border-radius: 10px; /* Bordas arredondadas no container */
@@ -2067,7 +2098,7 @@ footer .copyright {
 
 .texto-sobre-nos h1 {
   font-size: 2.8rem;
-  color:  var(--corpreta); /* Cor para título principal */
+  color:  black; /* Cor para título principal */
   margin-bottom: 1rem;
   animation: fade-in 1.5s ease-out; /* Animação de entrada */
 }
@@ -2120,7 +2151,7 @@ footer .copyright {
 .informacoes-adicionais p {
   font-size: 1.1rem;
   margin-top: 1rem;
-  color:  var(--corpreta);
+  color:  rgb(218, 218, 218);
 }
 
 .informacoes-adicionais strong {
@@ -2197,7 +2228,7 @@ footer .copyright {
   align-items: center; /* Alinha o texto verticalmente */
   justify-content: center; /* Centraliza o texto */
   padding: 12px 24px;
-  background: var(--segundopreto); /* Fundo com gradiente nos botões */
+  background: var(--primeira-cor); /* Fundo com gradiente nos botões */
   color: #fff; /* Texto branco */
   border-radius: 8px;
   cursor: pointer;
@@ -2211,9 +2242,9 @@ footer .copyright {
 }
 
 .menu-categoria li:hover {
-  background: linear-gradient(45deg, #0096c7, #005f73); /* Gradiente mais claro no hover */
+  background: linear-gradient(to right, #ff8800, #1a1a1a); /* Gradiente mais claro no hover */
   transform: translateY(-8px); /* Elevação mais pronunciada */
-  box-shadow: 0 8px 16px rgba(0, 149, 199, 0.3); /* Sombra mais intensa no hover */
+  box-shadow: 0 8px 16px rgba(199, 99, 0, 0.3); /* Sombra mais intensa no hover */
 }
 
 .menu-categoria li:active {
@@ -2328,7 +2359,7 @@ footer .copyright {
   padding: 10px 15px;
   font-size: 16px;
   color: #fff;
-  background: var(--segundopreto);
+  background: var(--primeira-cor);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -2336,7 +2367,7 @@ footer .copyright {
 }
 
 .contato-form button:hover {
-  background: #005f73;
+  background: black;
 }
 
 .contato-form button:disabled {
@@ -2462,7 +2493,7 @@ h2 {
 
 /* Estilo dos botões */
 .btn-pagamento {
-  background-color: #003366; /* Azul marinho */
+  background-color: var(--primeira-cor); /* Azul marinho */
   color: white;
   border: none;
   border-radius: 5px;
@@ -2473,7 +2504,7 @@ h2 {
 }
 
 .btn-pagamento:hover {
-  background-color: #002244; /* Azul mais escuro */
+  background-color: black; /* Azul mais escuro */
 }
 
 /* Estilo do parágrafo que exibe o método de pagamento escolhido */

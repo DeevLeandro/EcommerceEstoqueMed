@@ -17,7 +17,7 @@ export default function Rodape() {
           <p>Nos siga no Instagram e fique por dentro das novidades</p>
                    {/* Link para o Instagram */}
         <a
-          href="https://www.instagram.com/estoquemedpalmas/"
+          href="https://www.instagram.com/estoquemedgo/?igsh=MW0weW9rbjdmaGRzdQ%3D%3D&utm_source=qr#/"
           target="_blank"
           rel="noopener noreferrer"
         >

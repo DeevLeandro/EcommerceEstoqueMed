@@ -47,6 +47,8 @@ export default function Login() {
         }
       );
 
+      console.log("Resposta da API:", response.data);
+
       if (response.data?.ID) {
         setMensagem("Você já possui cadastro.");
         setTemCadastro(true);

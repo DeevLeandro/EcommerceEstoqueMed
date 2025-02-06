@@ -18,7 +18,7 @@ export default function Pagamento() {
   const [mostrarcreditoloja, setMostrarCreditoLoja] = useState(false);
   const navigate = useNavigate();
 
-  const [idPessoa, setIdPessoa] = useState(localStorage.getItem("userID") || "215381");
+  const [idPessoa, setIdPessoa] = useState(localStorage.getItem("userID") || "223039");
 
   useEffect(() => {
     const verificarLogin = () => {
@@ -68,6 +68,18 @@ const calcularQtdeVolume = () => {
   }, 0);
 };
 
+const codigosPagamento = {
+  "Boleto": 4,
+  "CartaoDebito": 1,
+  "CartaoCredito": 2,
+  "Pix": 7,
+  "Carteira": 3,
+  "Cheque": 5,
+  "Deposito": 10,
+  "Credito":12,
+  "Correntista": 13
+};
+
   const finalizarCompra = async () => {
     
    // Verificar se o CEP foi preenchido
@@ -88,6 +100,7 @@ const calcularQtdeVolume = () => {
     return;
   }
   
+  const tipoPagamento = codigosPagamento[metodoPagamento] || 4; // Usa 4 (Boleto) como padrão se não encontrar
         
     try {
       const itens = produtos.map((produto) => {
@@ -118,7 +131,7 @@ const calcularQtdeVolume = () => {
           Empresa: "682",
           Token: "7QDLJV9OHHIJBHYGJM8Y",
           IDPessoa: idPessoa,
-          IDVendedor: "140093",
+          IDVendedor: "223805",
           IDTransp: "",
           LocalVenda: "1",
           TipoMovim: "1",
@@ -130,7 +143,7 @@ const calcularQtdeVolume = () => {
           Troco: "0",
           Editar: "0",
           IDVenda: "0",
-          TipoPg: "4",
+          TipoPg: tipoPagamento.toString(),
           StatusTransacao: "1",
           Itens: itens,
         },
@@ -157,7 +170,7 @@ const calcularQtdeVolume = () => {
 
   const handleMetodoPagamentoChange = (metodo) => {
     console.log("ID Pessoa atual:", idPessoa); // Log para depuração
-    if (metodo === "CreditoLoja" && idPessoa === "215381") {
+    if (metodo === "CreditoLoja" && idPessoa === "223039") {
       alert("Essa forma de pagamento está disponível apenas para clientes logados.");
       return;
     }
@@ -208,7 +221,7 @@ const calcularQtdeVolume = () => {
         },
         params: {
           Token: "54918616RFBA4R4990RA38CR7A0787D2FD3E",
-          CEPOrigem: "76255000",
+          CEPOrigem: "74356048",
           CEPDestino: cepDestino.replace(/[^\d]/g, ""),
           ValorNFe: total.toFixed(2).replace(".", ","),
           QtdeVolume: qtdeVolume.toString(),

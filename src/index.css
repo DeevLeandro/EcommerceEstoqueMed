@@ -790,81 +790,6 @@ header .banner-slide .right-side img:hover {
   }
 }
 
-/* Menu categorias abaixo do navbar */
-.menu-categorias {
-  background-color: #5e4934; /* Cor de fundo escura, mais suave */
-  padding: 8px 20px; 
-  position: fixed;
-  top: 60px; /* Ajuste para ficar logo abaixo do navbar */
-  left: 0;
-  width: 100%;
-  z-index: 999; /* Fica abaixo do navbar, mas ainda sobre o conteúdo */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
-}
-
-/* Lista de categorias */
-.menu-categorias ul {
-  display: flex;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  justify-content: center; /* Itens centralizados */
-  align-items: center;
-}
-
-/* Itens da lista */
-.menu-categorias ul li {
-  margin: 0 20px;
-  padding: 8px 15px;
-  display: flex;
-  align-items: center;
-  color: #ecf0f1; /* Cor do texto */
-  cursor: pointer;
-  font-size: 1.1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Efeito de hover */
-.menu-categorias ul li:hover {
-  background-color: #1abc9c; /* Cor suave para o hover */
-  transform: translateY(-3px); /* Efeito de elevar o item */
-}
-
-/* Categoria selecionada */
-.menu-categorias ul li.selected {
-  background-color: #b97629; /* Azul para a categoria selecionada */
-  color: #ffffff;
-  font-weight: bold;
-}
-
-/* Ícones ao lado do nome da categoria */
-.menu-categorias ul li svg {
-  margin-right: 10px; /* Espaçamento entre o ícone e o texto */
-  font-size: 1.3rem; /* Aumenta o tamanho do ícone */
-}
-
-/* Responsividade: Ajustes para telas pequenas */
-@media (max-width: 768px) {
-  .menu-categorias {
-    top: 50px; /* Ajusta a distância do navbar em telas menores */
-    padding: 8px;
-  }
-
-  .menu-categorias ul {
-    flex-direction: column; /* Itens ficam empilhados verticalmente */
-    align-items: stretch; /* Ocupa a largura toda */
-  }
-
-  .menu-categorias ul li {
-    margin: 5px 0;
-    padding: 10px 0;
-    font-size: 1.2rem;
-    text-align: center; /* Centraliza o texto */
-  }
-}
-/* fim menu categoria */
-
 
 /* inicio sessao exclusiva */
 .selecao-titulo h3 {
@@ -2215,13 +2140,29 @@ margin-top: 1rem;
  
 }
 
+/* Inicio Menu Categoria */
+.menu-categoria {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Centraliza o menu */
+  align-items: center; /* Alinha os itens verticalmente */
+  padding: 15px 0;
+  margin: 30px 0;
+  position: relative;
+  border-radius: 10px;
+  background: #ffffff; /* Fundo claro para contraste */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra suave para destacar */
+}
+
 .menu-categoria ul {
   display: flex;
+  flex-wrap: wrap; /* Permite quebra de linha quando necessário */
   gap: 20px;
   list-style-type: none;
   padding: 0;
   margin: 0;
   animation: slideUp 0.6s ease-out;
+  justify-content: center; /* Centraliza itens em múltiplas linhas */
 }
 
 .menu-categoria li {
@@ -2229,7 +2170,7 @@ margin-top: 1rem;
   align-items: center; /* Alinha o texto verticalmente */
   justify-content: center; /* Centraliza o texto */
   padding: 12px 24px;
-  background: var(--primeira-cor); /* Fundo com gradiente nos botões */
+  background: var(--primeira-cor);  /* Fundo com gradiente nos botões */
   color: #fff; /* Texto branco */
   border-radius: 8px;
   cursor: pointer;
@@ -2240,18 +2181,47 @@ margin-top: 1rem;
   transform: translateY(10px);
   opacity: 1; /* Mantém visível desde o início */
   text-align: center; /* Centraliza o texto no botão */
+  min-width: 120px; /* Define uma largura mínima para os itens */
 }
 
 .menu-categoria li:hover {
-  background: linear-gradient(to right, #ff8800, #1a1a1a); /* Gradiente mais claro no hover */
+  background: black; /* Gradiente mais claro no hover */
   transform: translateY(-8px); /* Elevação mais pronunciada */
-  box-shadow: 0 8px 16px rgba(199, 99, 0, 0.3); /* Sombra mais intensa no hover */
+  box-shadow: 0 8px 16px rgba(199, 93, 0, 0.3); /* Sombra mais intensa no hover */
 }
 
 .menu-categoria li:active {
   transform: translateY(0); /* Remove animação quando clicar */
   scale: 0.95; /* Leve redução de tamanho ao clicar */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduz a sombra ao clicar */
+}
+
+.grupo-categoria {
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.subcategorias {
+  margin-left: 16px;
+}
+
+.subcategorias li {
+  cursor: pointer;
+  list-style-type: circle;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .menu-categoria ul {
+    gap: 10px; /* Reduz o espaço entre os itens */
+  }
+
+  .menu-categoria li {
+    padding: 10px 16px; /* Ajusta o tamanho dos itens */
+    font-size: 0.9rem; /* Fonte menor */
+    min-width: 100px; /* Reduz a largura mínima */
+  }
 }
 
 /* Efeito de entrada com animação */

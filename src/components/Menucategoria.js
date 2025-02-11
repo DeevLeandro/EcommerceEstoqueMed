@@ -37,35 +37,6 @@ export default function MenuCategoria({ setCategoriaSelecionada }) {
 
   const handleCategoriaClick = (categoria) => {
     setCategoriaSelecionada(categoria);
-
-    // Realizar a chamada para buscar todos os produtos relacionados à categoria
-    const configProdutos = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: "https://equilibrioapperp.pontalsistemas.com.br/serverecommerce/PesqProduto",
-      headers: {
-        "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
-        "Content-Type": "application/json",
-      },
-      params: {
-        Token: "7QDLJV9OHHIJBHYGJM8Y",
-        Grupo: "343",
-        Empresa: "682",
-        TipoPesquisa: "G", // Use "C" para pesquisa por categoria
-        Campo: "GrupoProduto",
-        Valor: categoria, // Valor da categoria selecionada
-        limite: "",
-        Paginacao: "10",
-      },
-    };
-
-    axios
-      .request(configProdutos)
-      .then((response) => {
-        console.log("Produtos da categoria:", response.data);
-        // Atualize o estado global de produtos (ou qualquer estado relacionado ao contexto)
-      })
-      .catch((error) => console.error("Erro ao buscar produtos da categoria:", error));
   };
 
   if (location.pathname !== "/Produto") {

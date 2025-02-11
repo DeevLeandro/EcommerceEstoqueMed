@@ -58,7 +58,7 @@ function MainContent({ produto, setProduto, erro, setErro, pagina, setPagina, lo
   const [limite, setLimite] = useState("4");
 
   useEffect(() => {
-    const novoLimite = searchTerm ? "" : location.pathname === "/" ? "4" : "12";
+    const novoLimite = searchTerm ? "" : location.pathname === "/" ? "4" : "";
     setLimite(novoLimite);
     setLoading(true);
 

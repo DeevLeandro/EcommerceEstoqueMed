@@ -436,7 +436,15 @@ header .banner-slide .right-side img:hover {
 
 @media (max-width: 580px) {
   .search-input-container {
-    display: none !important;
+    display: flex !important; /* Garante que ele seja visível */
+    width: 100%; /* Ocupa toda a largura disponível */
+    justify-content: center; /* Centraliza o conteúdo */
+    margin-top: 10px; /* Dá um espaço entre os elementos */
+  }
+
+  .search-input-container input {
+    width: 100%; /* Faz o input se expandir corretamente */
+    max-width: 300px; /* Define um tamanho máximo */
   }
 
   /* Ajusta a altura do header para o tamanho da imagem */

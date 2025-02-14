@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { resolvePath, useNavigate } from "react-router-dom";
 import { useCadastro } from "./CadastroContext";
 import { useTipoCliente } from "./PrecoContext";
 
@@ -10,7 +10,7 @@ export default function Login() {
   const [mensagem, setMensagem] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setTemCadastro, setNomeCliente, setFormasPagamento } = useCadastro();
+  const { setTemCadastro, setNomeCliente, setFormasPagamento, setValorCredito } = useCadastro();
   const { setTipoCliente } = useTipoCliente();
 
   const limparCPF = (cpf) => cpf.replace(/\D/g, "");
@@ -54,6 +54,7 @@ export default function Login() {
         setTemCadastro(true);
         setTipoCliente(response.data.TipoCliente);
         setNomeCliente(response.data.Nome);
+        setValorCredito(response.data.ValorCredito);
         setFormasPagamento({
           boleto: response.data.Boleto,
           cartaoCredito: response.data.CartaoCredito,

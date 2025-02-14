@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { useCadastro } from "./CadastroContext";
 
 const FormadeCredito = () => {
-  const { formasPagamento, limitesPagamento } = useCadastro();
+  const { formasPagamento, ValorCredito } = useCadastro();
   const [metodoPagamento, setMetodoPagamento] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
 
   const handleMetodoPagamento = (metodo, key) => {
-    const limite = limitesPagamento?.[key] || 0; // Obtém o limite disponível, se existir
+    const limite = ValorCredito?.[key] || 0; // Obtém o limite disponível, se existir
     
     if (formasPagamento[key] !== "1") {
-      setMensagemErro(`Você não possui limite suficiente para ${metodo}.`);
+      alert(`Forma de pagamento não autorizada para seu cadastro.`);
     } else if (limite > 0) {
       setMensagemErro(`Seu limite para ${metodo} é de R$ ${limite.toFixed(2)}.`);
       setMetodoPagamento(metodo);
@@ -49,8 +49,12 @@ const FormadeCredito = () => {
       ) : (
         <p>Carregando opções de pagamento...</p>
       )}
+
       {metodoPagamento && <p className="metodo-selecionado">Você escolheu: {metodoPagamento}</p>}
       {mensagemErro && <p className="erro-pagamento">{mensagemErro}</p>}
+      {ValorCredito !== null && (
+        <p className="limite-credito">Seu limite total de crédito: <strong>R$ {ValorCredito}</strong></p>
+      )}
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 export default function MenuCategoria({ setCategoriaSelecionada }) {
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [menuAberto, setMenuAberto] = useState(false); // Estado para abrir/fechar o menu
   const location = useLocation();
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function MenuCategoria({ setCategoriaSelecionada }) {
 
   const handleCategoriaClick = (categoria) => {
     setCategoriaSelecionada(categoria);
+    setMenuAberto(false); // Fecha o menu ao selecionar uma categoria
   };
 
   if (location.pathname !== "/Produto") {
@@ -44,18 +46,27 @@ export default function MenuCategoria({ setCategoriaSelecionada }) {
   }
 
   return (
-    <div className="menu-categoria">
-      {loading ? (
-        <p>Carregando categorias...</p>
-      ) : (
-        <ul>
-          {categorias.map((descricao, index) => (
-            <li key={index} onClick={() => handleCategoriaClick(descricao)}>
-              {descricao}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      {/* Botão para abrir o menu */}
+      <button className="menu-toggle" onClick={() => setMenuAberto(!menuAberto)}>
+        ☰ Categorias
+      </button>
+
+      {/* Menu Lateral */}
+      <div className={`menu-categoria ${menuAberto ? "aberto" : ""}`}>
+        <button className="fechar-menu" onClick={() => setMenuAberto(false)}>×</button>
+        {loading ? (
+          <p>Carregando categorias...</p>
+        ) : (
+          <ul>
+            {categorias.map((descricao, index) => (
+              <li key={index} onClick={() => handleCategoriaClick(descricao)}>
+                {descricao}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }

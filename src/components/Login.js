@@ -47,7 +47,7 @@ export default function Login() {
         }
       );
 
-      console.log("Resposta da API:", response.data);
+      // console.log("Resposta da API:", response.data);
 
       if (response.data?.ID) {
         setMensagem("Você já possui cadastro.");
@@ -57,12 +57,12 @@ export default function Login() {
         setValorCredito(response.data.ValorCredito);
         setFormasPagamento({
           boleto: response.data.Boleto,
-          cartaoCredito: response.data.CartaoCredito,
+          CartaoCredito: response.data.CartaoCredito,
           cartaoNaoPresencial: response.data.CartaoNaoPresencial,
           carteira: response.data.Carteira,
           cheque: response.data.Cheque,
           correntista: response.data.Correntista,
-          deposito: response.data.Deposito,
+          deposito: response.data.Despito,
           pixCredito: response.data.PixCredito,
         });
         localStorage.setItem("userID", response.data.ID);

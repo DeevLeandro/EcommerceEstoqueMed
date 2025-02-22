@@ -55,7 +55,7 @@ export default function ProdutoDetalhe() {
         }
       })
       .catch((error) => {
-        console.error("Erro ao buscar produto:", error);
+        // console.error("Erro ao buscar produto:", error);
         setErro("Erro ao carregar produto. Tente novamente mais tarde.");
       })
       .finally(() => setLoading(false));

@@ -16,6 +16,7 @@ import { CadastroProvider } from "./components/CadastroContext"; // Importando o
 import { PrecoProvider } from "./components/PrecoContext";
 import Contato from "./components/Contato";
 import { CartaoProvider } from "./components/CartaoContext";
+import { PagamentoProvider } from "./components/PagamentoContext";
 function App() {
   const [produto, setProduto] = useState([]);
   const [erro, setErro] = useState(null);
@@ -28,6 +29,7 @@ function App() {
         <PesquisaProvider>
         <PrecoProvider>
           <CartaoProvider>
+          <PagamentoProvider> 
           <Router>
             <div className="App">
               <Navbar />
@@ -44,6 +46,7 @@ function App() {
               <Rodape />
             </div>
           </Router>
+          </PagamentoProvider>
           </CartaoProvider>
           </PrecoProvider>
         </PesquisaProvider>
@@ -85,12 +88,12 @@ function MainContent({ produto, setProduto, erro, setErro, pagina, setPagina, lo
     axios
       .request(config)
       .then((response) => {
-        console.log("Resposta da API:", response.data);
+        // console.log("Resposta da API:", response.data);
         setProduto(response.data.produtos || response.data);
         setErro(null);
       })
       .catch((error) => {
-        console.error("Erro na requisição:", error);
+        // console.error("Erro na requisição:", error);
         setErro(error.message);
       })
       .finally(() => {

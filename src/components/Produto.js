@@ -5,7 +5,7 @@ import { useCart } from "./CartContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTipoCliente } from "./PrecoContext";
 
-export default function Produto({ id, nome, preco, preco2, estoque, marca, image1, image2, categorias }) {
+export default function Produto({ id, nome, preco, preco2, estoque, marca, image1, image2, categorias, promocao }) {
   const { adicionarAoCarrinho } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,6 +13,12 @@ export default function Produto({ id, nome, preco, preco2, estoque, marca, image
   const precoVarejo = preco2 ? parseFloat(preco2.replace(",", ".")) : 0;
   const { TipoCliente } = useTipoCliente();
   const [rating, setRating] = useState(0);
+
+
+  // Verifica se há promoção e calcula o novo preço
+  const desconto = promocao ? parseFloat(promocao) : 0;
+  const precoBase = TipoCliente === "0" ? precoAtacado : precoVarejo;
+  const precoComDesconto = promocao ? precoBase - (precoBase * (desconto / 100)) : precoBase;
 
   const handleAddToCart = () => {
     if (estoque <= 0) {
@@ -23,7 +29,7 @@ export default function Produto({ id, nome, preco, preco2, estoque, marca, image
     adicionarAoCarrinho({
       id,
       nome,
-      preco: TipoCliente === "0" ? precoAtacado : precoVarejo,
+      preco: TipoCliente === "0" ? precoAtacado : precoVarejo, precoComDesconto,
       image: image1,
       estoque,
     });
@@ -55,6 +61,7 @@ export default function Produto({ id, nome, preco, preco2, estoque, marca, image
           className="fade-in"
           onClick={handleViewDetails}
         />
+        {promocao && <span className="promocao">-{promocao}% OFF</span>}
       </div>
       <p className="name">{nome}</p>
       <p className="id">{id}</p>
@@ -72,6 +79,16 @@ export default function Produto({ id, nome, preco, preco2, estoque, marca, image
       <p className="estoque"> Quantidade: {estoque}</p>
       <p className="price">
         <span>R$</span>{(TipoCliente === "0" ? precoAtacado : precoVarejo).toFixed(2)}
+      </p>
+      <p className="promocao">
+      {promocao ? (
+          <>
+            <span className="old-price">R${precoBase.toFixed(2)}</span>
+            <span className="new-price"> R${precoComDesconto.toFixed(2)}</span>
+          </>
+        ) : (
+          <span>{''}</span>
+        )}
       </p>
       <div className="btnPrduto">
         <button className="btn-icon add-to-cart-btn" onClick={handleAddToCart}>

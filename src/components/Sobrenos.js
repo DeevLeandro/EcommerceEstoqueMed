@@ -1,3 +1,5 @@
+import { faBoxOpen, faBriefcaseMedical, faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 export default function SobreNos() {
@@ -6,26 +8,40 @@ export default function SobreNos() {
       {/* Texto principal */}
       <div className="texto-sobre-nos">
         <h1>Quem Somos</h1>
-        <h2>ESTOQUE MED</h2>
         <p>
-          Na <strong>ESTOQUE MED</strong>, somos uma distribuidora de materiais hospitalares, comprometida em fornecer produtos de alta qualidade para o setor de saúde.
+        Nascemos em 2021 e carregamos como missão proporcionar saúde por meio dos nossos itens hospitalares.
+        Estamos localizados em Goiânia-GO e também contamos com uma extensão de nós em Palmas-TO.
         </p>
-        <p>
-          Trabalhamos com equipamentos e materiais certificados, garantindo segurança e eficiência para nossos clientes em todo o Brasil.
+        
+         {/* Atendimento */}
+      <div>
+        <h2 className="Atentimento"><FontAwesomeIcon icon={faStar} className="icone" />Atendimento </h2>
+        <p className="text-lg text-gray-700">
+          Na nossa empresa, o atendimento ao cliente vai além do esperado. Priorizamos um serviço personalizado,
+          com atenção especial a cada detalhe, garantindo que você se sinta valorizado.
+          Nossa equipe sempre está pronta para oferecer soluções rápidas e eficientes.
         </p>
+      </div>
+
+       {/* Entregas */}
+       <div>
+        
+        <h2 className="Entrega"><FontAwesomeIcon icon={faBoxOpen} className="icone" /> Entregas</h2>
+        <p className="text-lg text-gray-700">
+          Aqui, a sua satisfação é a nossa prioridade! Oferecemos entregas rápidas e eficientes, garantindo
+          que seu pedido chegue no prazo e em perfeitas condições. Com um processo de logística otimizado
+          e um time comprometido com a excelência.
+        </p>
+      </div>
 
         {/* Lista de Diferenciais */}
         <ul className="diferenciais">
+        <h2 className="diferencia-texto"><FontAwesomeIcon icon={faBriefcaseMedical} className="icone" /> Nossos Diferenciais</h2>
           <li><strong>Materiais de alta qualidade</strong></li>
           <li><strong>Entrega rápida e segura</strong></li>
           <li><strong>Atendimento especializado</strong></li>
           <li><strong>Parcerias confiáveis</strong></li>
         </ul>
-        
-        {/* Chamada para ação */}
-        <p className="chamada-para-acao">
-          <strong>Explore nossa linha de materiais hospitalares e faça seu pedido com confiança.</strong>
-        </p>
       </div>
 
       {/* Informações adicionais */}

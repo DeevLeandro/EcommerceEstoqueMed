@@ -658,7 +658,6 @@ header .banner-slide .right-side img:hover {
   margin-bottom: 0.2rem;
 }
 
-
 .Lista .rate {
   display: flex;
   gap: 5px; /* Espaçamento entre as estrelas */
@@ -678,6 +677,20 @@ header .banner-slide .right-side img:hover {
 }
 
 
+/* Estiliza o preço original (riscado) */
+.Lista .old-price {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+/* Estiliza o novo preço promocional */
+.new-price {
+  color: #d9534f;
+  font-size: 18px;
+  font-weight: bold;
+}
 
 
 /* Botões de ação dos produtos */
@@ -2024,10 +2037,11 @@ margin-top: 1rem;
   padding: 3rem 1.5rem;
   background: #ff8800;
   color: #fff;
-  font-family: "Arial", sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   border-radius: 10px; /* Bordas arredondadas no container */
   margin-top: 3rem; /* Distância do topo */
   overflow: hidden; /* Previne conteúdos extras visíveis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .texto-sobre-nos h1 {
@@ -2039,9 +2053,9 @@ margin-top: 1rem;
 
 .texto-sobre-nos h2 {
   font-size: 2.2rem;
-  color: #fff; /* Cor para o subtítulo */
+  color: black; /* Cor para o subtítulo */
+  font-weight: bold;
   margin-bottom: 1.5rem;
-  font-weight: normal;
 }
 
 .texto-sobre-nos p {
@@ -2051,12 +2065,18 @@ margin-top: 1rem;
   animation: slide-up 1.2s ease-out; /* Animação de subida */
 }
 
+.icone {
+  font-size: 3.5rem; /* Ícones maiores */
+  color: black; /* Ícones pretos */
+  margin-right: 10px;
+}
+
 .diferenciais {
   list-style-type: none;
   padding-left: 0;
   margin-top: 2rem;
   font-size: 1.2rem;
-  text-align:  center;
+  text-align: center;
 }
 
 .diferenciais li {
@@ -2085,7 +2105,7 @@ margin-top: 1rem;
 .informacoes-adicionais p {
   font-size: 1.1rem;
   margin-top: 1rem;
-  color:  rgb(218, 218, 218);
+  color: rgb(218, 218, 218);
 }
 
 .informacoes-adicionais strong {
@@ -2135,116 +2155,101 @@ margin-top: 1rem;
 
 /* Final Sobre Nos */
 
-/* Inicio Menu Categoria */
-.menu-categoria {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* Centraliza o menu */
-  align-items: center; /* Alinha os itens verticalmente */
-  padding: 15px 0;
-  margin: 20px 0;
-  position: relative;
-  border-radius: 10px;
- 
+/* Botão para abrir o menu */
+.menu-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: var(--primeira-cor);
+  font-weight: bold;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 1001;
+  transition: 0.3s;
 }
 
-/* Inicio Menu Categoria */
-.menu-categoria {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* Centraliza o menu */
-  align-items: center; /* Alinha os itens verticalmente */
-  padding: 15px 0;
-  margin: 30px 0;
-  position: relative;
-  border-radius: 10px;
-  background: #ffffff; /* Fundo claro para contraste */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra suave para destacar */
+.menu-toggle:hover {
+  background: black;
 }
 
+/* Estilizando o menu lateral */
+.menu-categoria {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 85px;
+  left: -250px; /* Inicia escondido */
+  background: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  padding-top: 20px;
+  transition: all 0.3s ease-in-out;
+  overflow-y: auto; /* Adiciona barra de rolagem */
+  z-index: 1000;
+}
+
+/* Quando o menu estiver aberto */
+.menu-categoria.aberto {
+  left: 0;
+}
+
+/* Botão para fechar o menu */
+.fechar-menu {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Lista do menu */
 .menu-categoria ul {
-  display: flex;
-  flex-wrap: wrap; /* Permite quebra de linha quando necessário */
-  gap: 20px;
-  list-style-type: none;
-  padding: 0;
+  list-style: none;
+  border-radius: 8px;
+  padding: 20px;
   margin: 0;
-  animation: slideUp 0.6s ease-out;
-  justify-content: center; /* Centraliza itens em múltiplas linhas */
+  max-height: 80vh; /* Limita a altura da lista */
+  overflow-y: auto; /* Adiciona barra de rolagem apenas à lista */
 }
 
 .menu-categoria li {
-  display: flex;
-  align-items: center; /* Alinha o texto verticalmente */
-  justify-content: center; /* Centraliza o texto */
-  padding: 12px 24px;
-  background: var(--primeira-cor);  /* Fundo com gradiente nos botões */
-  color: #fff; /* Texto branco */
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem; /* Tamanho da fonte ajustado */
-  font-weight: 600; /* Texto mais chamativo */
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra mais forte */
-  transform: translateY(10px);
-  opacity: 1; /* Mantém visível desde o início */
-  text-align: center; /* Centraliza o texto no botão */
-  min-width: 120px; /* Define uma largura mínima para os itens */
+  transition: 0.3s;
 }
 
 .menu-categoria li:hover {
-  background: black; /* Gradiente mais claro no hover */
-  transform: translateY(-8px); /* Elevação mais pronunciada */
-  box-shadow: 0 8px 16px rgba(199, 93, 0, 0.3); /* Sombra mais intensa no hover */
-}
-
-.menu-categoria li:active {
-  transform: translateY(0); /* Remove animação quando clicar */
-  scale: 0.95; /* Leve redução de tamanho ao clicar */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduz a sombra ao clicar */
-}
-
-.grupo-categoria {
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 8px;
-}
-
-.subcategorias {
-  margin-left: 16px;
-}
-
-.subcategorias li {
-  cursor: pointer;
-  list-style-type: circle;
+  background: var(--primeira-cor);
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .menu-categoria ul {
-    gap: 10px; /* Reduz o espaço entre os itens */
+  .menu-categoria {
+    width: 100%;
+    height: 100vh;
+    left: -100%; /* Esconde completamente no mobile */
   }
-
-  .menu-categoria li {
-    padding: 10px 16px; /* Ajusta o tamanho dos itens */
-    font-size: 0.9rem; /* Fonte menor */
-    min-width: 100px; /* Reduz a largura mínima */
+  .menu-categoria.aberto {
+    left: 0;
   }
-}
-
-/* Efeito de entrada com animação */
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  .menu-toggle {
+    top: 15px;
+    left: 15px;
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }
 
-/* Fim Menu Categoria */
 
 .loading-container {
   position: fixed;
@@ -2362,6 +2367,7 @@ margin-top: 1rem;
   padding: 0;
   width: 100%; /* Ocupa toda a largura */
   border-radius: 15px;
+  
 }
 
 /* Título */
@@ -2387,6 +2393,7 @@ margin-top: 1rem;
   height: 400px; /* Altura fixa */
   object-fit: cover; /* Mantém a proporção e cobre o container */
   transition: transform 0.5s ease-in-out; /* Suavização */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Texto abaixo do mapa */

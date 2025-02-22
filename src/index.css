@@ -437,6 +437,7 @@ header .banner-slide .right-side img:hover {
   .logo {
     font-size: 1.2rem; /* Reduz o tamanho da logo */
     margin-left: 1rem; /* Ajusta a margem para melhor alinhamento */
+    margin-right: 2rem;
   }
 
   .logo span {
@@ -468,6 +469,7 @@ header .banner-slide .right-side img:hover {
   .logo {
     font-size: 1.2rem; /* Reduz o tamanho da logo */
     margin-left: 1rem; /* Ajusta a margem para melhor alinhamento */
+    margin-right: 2rem;
   }
 
   .logo span {

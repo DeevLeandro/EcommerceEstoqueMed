@@ -80,7 +80,7 @@ input[type="search"] {
   font-size: 2.5rem; /* Tamanho aumentado para a logo */
   display: flex;
   align-items: center;
-  margin-left: 3rem;
+  margin-left: 3.5rem;
 }
 
 .logo span {
@@ -110,6 +110,7 @@ nav ul li {
   padding: 5px;
   transition: background-color 0.3s ease, transform 0.3s ease;
   font-weight: bolder;
+  margin-right: 0.5rem;
 }
 
 /* Estilo do link para remover sublinhado e ajustar cor inicial */
@@ -436,8 +437,7 @@ header .banner-slide .right-side img:hover {
   
   .logo {
     font-size: 1.2rem; /* Reduz o tamanho da logo */
-    margin-left: 1rem; /* Ajusta a margem para melhor alinhamento */
-    margin-right: 2rem;
+    margin-left: 0; /* Ajusta a margem para melhor alinhamento */
   }
 
   .logo span {
@@ -468,8 +468,7 @@ header .banner-slide .right-side img:hover {
 
   .logo {
     font-size: 1.2rem; /* Reduz o tamanho da logo */
-    margin-left: 1rem; /* Ajusta a margem para melhor alinhamento */
-    margin-right: 2rem;
+    margin-left: 0; /* Ajusta a margem para melhor alinhamento */
   }
 
   .logo span {

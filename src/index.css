@@ -80,6 +80,7 @@ input[type="search"] {
   font-size: 2.5rem; /* Tamanho aumentado para a logo */
   display: flex;
   align-items: center;
+  margin-left: 3rem;
 }
 
 .logo span {
@@ -432,6 +433,17 @@ header .banner-slide .right-side img:hover {
   .menu-button {
     display: inline;
   }
+  
+  .logo {
+    font-size: 1.2rem; /* Reduz o tamanho da logo */
+    margin-left: 1rem; /* Ajusta a margem para melhor alinhamento */
+  }
+
+  .logo span {
+    font-size: 1rem; /* Diminui o tamanho do texto secundário */
+  }
+
+
 }
 
 @media (max-width: 580px) {
@@ -452,6 +464,16 @@ header .banner-slide .right-side img:hover {
     height: auto; /* Altura se adapta automaticamente à imagem */
     padding: 0;
   }
+
+  .logo {
+    font-size: 1.2rem; /* Reduz o tamanho da logo */
+    margin-left: 1rem; /* Ajusta a margem para melhor alinhamento */
+  }
+
+  .logo span {
+    font-size: 1rem; /* Diminui o tamanho do texto secundário */
+  }  
+
 }
 
 /* Responsividade para o header e conteúdo */

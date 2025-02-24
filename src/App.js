@@ -17,6 +17,7 @@ import { PrecoProvider } from "./components/PrecoContext";
 import Contato from "./components/Contato";
 import { CartaoProvider } from "./components/CartaoContext";
 import { PagamentoProvider } from "./components/PagamentoContext";
+import Pedido from "./components/Pedido";
 function App() {
   const [produto, setProduto] = useState([]);
   const [erro, setErro] = useState(null);
@@ -139,6 +140,7 @@ function MainContent({ produto, setProduto, erro, setErro, pagina, setPagina, lo
           element={<ProdutoDetalhe produto={produto} />}
         />
         <Route path="/pagamento" element={<Pagamento />} />
+        <Route path="/pedido" element={<Pedido />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/cont" element={<Contato />} />

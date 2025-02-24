@@ -2528,3 +2528,71 @@ font-size: 24px;
 font-weight: bold;
 margin-top: 2rem; 
 }
+
+/* Pedido.css */
+.pedido-container {
+  max-width: 1000px; /* Aumentei o máximo para acomodar múltiplos pedidos */
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  display: flex; /* Define o container como flex */
+  flex-wrap: wrap; /* Permite que os pedidos se ajustem para novas linhas se necessário */
+  gap: 20px; /* Espaçamento entre os pedidos */
+}
+
+.pedido-container h2 {
+  color: #333;
+  margin-bottom: 12px;
+  width: 100%; /* Para garantir que o título ocupe toda a largura disponível */
+}
+
+.pedido-detalhes {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.5rem;
+  flex: 1 0 45%; /* Isso garante que os pedidos ocupem 45% da largura do container */
+  box-sizing: border-box; /* Para incluir o padding na largura total */
+  min-width: 300px; /* Tamanho mínimo para que os pedidos não fiquem muito pequenos */
+}
+
+.pedido-detalhes p {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #444;
+}
+
+.pedido-detalhes p strong {
+  color: black;
+  font-weight: bold;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.pedido-liberacao {
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.pedido-liberacao.analise {
+  color: #d39e00;
+  background: #fff3cd;
+}
+
+.pedido-liberacao.liberado {
+  color: #15aa38;
+  background: #d4edda;
+}
+
+.pedido-carregando {
+  font-size: 18px;
+  color: #888;
+  margin-top: 20px;
+}

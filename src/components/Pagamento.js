@@ -373,21 +373,21 @@ const calcularQtdeVolume = () => {
           <p className="pagamento-total">Total: R$ {total.toFixed(2).replace('.', ',')}</p>
           <p className="pagamento-total">Frete: R$ {valorFrete.toFixed(2).replace('.', ',')}</p>
           <p className="pagamento-total">Total com Frete: R$ {(total + valorFrete).toFixed(2).replace('.', ',')}</p>
-          <p className="pagamento-prazo">Prazo de Entrega: {prazoEntrega} dias</p>
+          {/* <p className="pagamento-prazo">Prazo de Entrega: {prazoEntrega} dias</p> */}
         </div>
 
         {/* Card de endereço */}
         <div className="pagamento-card">
-          <h3 className="pagamento-card-title">Endereço de Entrega</h3>
-          <input
+          {/* <h3 className="pagamento-card-title">Endereço de Entrega</h3> */}
+          {/* <input
             type="text"
             placeholder="Digite o CEP de Destino"
             value={cepDestino}
             onChange={(e) => setCepDestino(e.target.value)}
             className="pagamento-endereco-input"
           />
-          
-          <textarea
+           */}
+          {/* <textarea
             value={enderecoEntrega}
             onChange={(e) => setEnderecoEntrega(e.target.value)}
             className="pagamento-endereco-textarea"
@@ -399,15 +399,15 @@ const calcularQtdeVolume = () => {
             value={pontoReferencia}
             onChange={(e) => setPontoReferencia(e.target.value)}
             className="pagamento-endereco-input"
-          />
+          /> */}
         </div>
         <div className="pagamento-buttons-container">
-            <button onClick={() => buscarEnderecoPorCep(cepDestino)} className="pagamento-buscar-cep-btn">
+            {/* <button onClick={() => buscarEnderecoPorCep(cepDestino)} className="pagamento-buscar-cep-btn">
               Buscar Endereço
             </button>
             <button onClick={calcularFrete} className="pagamento-calcular-frete-btn">
               Calcular Frete
-            </button>
+            </button> */}
           </div>
           
         {/* Card de métodos de pagamento */}

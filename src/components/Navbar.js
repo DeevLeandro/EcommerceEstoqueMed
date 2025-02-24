@@ -83,6 +83,11 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
+            <Link to="/pedido"> 
+            <FontAwesomeIcon icon={faBox} className="fa-icon" />Pedidos
+            </Link>
+            </li>
+            <li>
               <Link to="/cont">
                 <FontAwesomeIcon icon={faPhone} className="fa-icon" /> Contato
               </Link>

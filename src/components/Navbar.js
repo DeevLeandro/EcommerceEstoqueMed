@@ -10,7 +10,7 @@ import {
   faUserCircle,
   faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Importando useLocation
 import { usePesquisa } from "./PesquisaContext";
 import Listacarinho from "./Listacarinho";
 import { useCart } from "./CartContext";
@@ -20,19 +20,20 @@ import Loading from "./Loading";
 export default function Navbar() {
   const [showCart, setShowCart] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
+  const [isLoading, setIsLoading] = useState(false);
   const { searchTerm, setSearchTerm } = usePesquisa();
   const { produtos } = useCart();
   const { temCadastro, nomeCliente } = useCadastro();
   const navigate = useNavigate();
+  const location = useLocation(); // Obtém a URL atual
 
   const handleSearch = () => {
     if (searchTerm) {
-      setIsLoading(true); // Inicia o carregamento
+      setIsLoading(true);
       setTimeout(() => {
-        setIsLoading(false); // Simula carregamento
+        setIsLoading(false);
         navigate("/Produto");
-      }, 1500); // 1.5 segundos de carregamento
+      }, 1500);
     } else {
       alert("Digite algo para buscar.");
     }
@@ -45,14 +46,14 @@ export default function Navbar() {
 
   const handleHomeClick = () => {
     setSearchTerm("");
-    navigate("/"); // Navega para a página inicial sem recarregar
+    navigate("/");
   };
 
   return (
     <div className="nav">
       <div className="inner-content">
         <Link to="/" onClick={handleHomeClick}>
-          <h1 className="logo">
+          <h1 className="logo" style={{ visibility: location.pathname === "/Produto" ? "hidden" : "visible" }}>
             ESTOQUE<span>MED</span>
           </h1>
         </Link>
@@ -74,18 +75,14 @@ export default function Navbar() {
                 className={quantidadeTotal === 0 ? "disabled-link" : ""}
               >
                 <button disabled={quantidadeTotal === 0}>
-                  <FontAwesomeIcon
-                    icon={faCreditCard}
-                    className="fa-icon"
-                  />{" "}
-                  Pagamento
+                  <FontAwesomeIcon icon={faCreditCard} className="fa-icon" /> Pagamento
                 </button>
               </Link>
             </li>
             <li>
-            <Link to="/pedido"> 
-            <FontAwesomeIcon icon={faBox} className="fa-icon" />Pedidos
-            </Link>
+              <Link to="/pedido"> 
+                <FontAwesomeIcon icon={faBox} className="fa-icon" /> Pedidos
+              </Link>
             </li>
             <li>
               <Link to="/cont">
@@ -125,16 +122,16 @@ export default function Navbar() {
           
           <button>
             <Link to="/login">
-             <FontAwesomeIcon
-               icon={faUserCircle}
+              <FontAwesomeIcon
+                icon={faUserCircle}
                 className={`fa-icon ${temCadastro ? "icon-verde" : "icon-cinza"}`}
-                />
-               {temCadastro && nomeCliente && (
+              />
+              {temCadastro && nomeCliente && (
                 <span className="nome-cliente" style={{ marginLeft: "8px" }}>
-                {nomeCliente.split(" ")[0]} {/* Exibe somente o primeiro nome */}
+                  {nomeCliente.split(" ")[0]}
                 </span>
-                 )}
-             </Link>
+              )}
+            </Link>
           </button>
 
           <button

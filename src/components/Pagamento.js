@@ -77,11 +77,11 @@ const calcularQtdeVolume = () => {
 
   const finalizarCompra = async () => {
     
-   // Verificar se o CEP foi preenchido
-   if (!cepDestino || cepDestino.replace(/[^\d]/g, "").length !== 8) {
-    alert("Por favor, insira um CEP válido e calcule o frete antes de finalizar a compra.");
-    return;
-  }
+  //  // Verificar se o CEP foi preenchido
+  //  if (!cepDestino || cepDestino.replace(/[^\d]/g, "").length !== 8) {
+  //   alert("Por favor, insira um CEP válido e calcule o frete antes de finalizar a compra.");
+  //   return;
+  // }
 
   if (!codigoPagamento) {
     alert("Selecione um método de pagamento antes de finalizar a compra.");

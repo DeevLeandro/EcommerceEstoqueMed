@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ConfigurarCartao from "./ConfigurarCartao";
 import { usePagamento } from "./PagamentoContext";
-import FormadeCredito from "./FormadeCredito";
+import { useTipoCliente } from "./PrecoContext";
 import { QRCodeCanvas } from "qrcode.react";
 
 export default function Pagamento() {
@@ -16,16 +16,15 @@ export default function Pagamento() {
   const [prazoEntrega, setPrazoEntrega] = useState("");
   const [metodoPagamento, setMetodoPagamento] = useState("");
   const [mostrarConfigurarCartao, setMostrarConfigurarCartao] = useState(false);
-  const [mostrarcreditoloja, setMostrarCreditoLoja] = useState(false);
   const [codigoPagamento, setCodigoPagamento] = useState(null);
   const [pagamentoConfirmado, setPagamentoConfirmado] = useState(false);
   const [contador, setContador] = useState(60);
-  const [qrCodeBase64, setQrCodeBase64] = useState(""); // Estado para armazenar o QR Code
+  const [qrCodeBase64, setQrCodeBase64] = useState("");
   const [paymentId, setPaymentId] = useState(null);
-  const [mostrarCep, setMostrarCep] = useState(true); // Estado para controlar a visibilidade do CEP
+  const [mostrarCep, setMostrarCep] = useState(true);
   const [retirarNaLoja, setRetirarNaLoja] = useState(false);
-  const [cepDesabilitado, setCepDesabilitado] = useState(false); // Estado para desabilitar o campo
-  const [gerol, setGerol] = useState("0");
+  const { TipoCliente } = useTipoCliente();
+  const [cepDesabilitado, setCepDesabilitado] = useState(false);
   const navigate = useNavigate();
   const [idPessoa, setIdPessoa] = useState(localStorage.getItem("userID") || "223039");
 
@@ -47,7 +46,7 @@ export default function Pagamento() {
     } else if (contador === 0) {
       verificarPagamento();
     }
-    return () => clearInterval(timer); // Limpa o timer quando o componente é desmontado ou quando o pagamento é confirmado
+    return () => clearInterval(timer);
   }, [qrCodeBase64, contador, pagamentoConfirmado]);
 
   const enviarPagamentoPix = async () => {
@@ -66,7 +65,7 @@ export default function Pagamento() {
           "Content-Type": "application/json",
         },
       });
-      console.log("Resposta da API:", response.data);     
+      
       if (response.data && response.data.CHAVEPAGAMENTO) {
         setQrCodeBase64(response.data.CHAVEPAGAMENTO);
       } else {
@@ -75,175 +74,115 @@ export default function Pagamento() {
       }
 
       if (response.data && response.data.payment_id) {
-        setPaymentId(response.data.payment_id); // Salva o payment_id
+        setPaymentId(response.data.payment_id);
       } else {
         console.error("Erro: payment_id não encontrado na resposta da API.");
       }
 
-      setContador(20); // Reinicia o contador
+      setContador(1);
     } catch (error) {
       console.error("Erro ao processar pagamento PIX:", error);
     }
-};
+  };
 
-const verificarPagamento = async () => {
-  try {
-    if (!paymentId) {
-      console.error("Erro: payment_id não definido.");
-      return;
-    }
-    const response = await axios.post("https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/StatusPagamento", {
-      payment_id: paymentId, // Usa o payment_id capturado
-      ChaveAPI:"APP_USR-5998987835151881-031812-37e9788175d1c99a31553fa2f7870064-1319414806",
-    }, {
-      headers: {
-        "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
-        "Content-Type": "application/json",
-      },
-    });
-    // console.log("Resposta da API:", response.data);
-    // Verificar status do pagamento
-    if (response.data.Status === "approved") { // Corrigido para "Status" com "S" maiúsculo
-      setPagamentoConfirmado(true);
-      finalizarCompra();
-    } else if (response.data.Status === "pending") { // Corrigido para "Status" com "S" maiúsculo
-      setContador(20); // Reinicia o contador para tentar novamente
-    } else {
-      console.log("Status do pagamento: " + response.data.Status); // Corrigido para "Status" com "S" maiúsculo
-    }
-  } catch (error) {
-    console.error("Erro ao verificar pagamento:", error);
-  }
-};
-
-// Função para copiar o código PIX
-const copiarCodigoPix = async () => {
-  try {
-    await navigator.clipboard.writeText(qrCodeBase64); // Copia o código PIX
-    alert("Código PIX copiado para a área de transferência!"); // Feedback para o usuário
-  } catch (error) {
-    console.error("Erro ao copiar o código PIX:", error);
-    alert("Erro ao copiar o código PIX. Tente novamente.");
-  }
-};
-
-const enviarPagamentoBoleto = async () => {
-  try {
-    const response = await axios.post(
-      "https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/MercadoPagoBoleto",
-      {
-        Grupo: "343",
-        Empresa: "682",
-        Pessoa: idPessoa,
-        ChaveAPI: "APP_USR-7463414469706157-031813-539aa2560dda9a4cfb52703e667173f0-1319414806",
-        Valor: total.toFixed(2).replace(".", ","),
-      },
-      {
+  const verificarPagamento = async () => {
+    try {
+      if (!paymentId) {
+        console.error("Erro: payment_id não definido.");
+        return;
+      }
+      const response = await axios.post("https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/StatusPagamento", {
+        payment_id: paymentId,
+        ChaveAPI:"APP_USR-5998987835151881-031812-37e9788175d1c99a31553fa2f7870064-1319414806",
+      }, {
         headers: {
           "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
           "Content-Type": "application/json",
         },
+      });
+
+      if (response.data.Status === "approved") {
+        setPagamentoConfirmado(true);
+        finalizarCompra();
+      } else if (response.data.Status === "pending") {
+        setContador(1);
+      } else {
+        console.log("Status do pagamento: " + response.data.Status);
       }
-    );
-
-    console.log("Resposta da API:", response.data);
-
-    if (response.data && response.data.Boleto_URL) {
-      // Abre o boleto em uma nova aba
-      const novaAba = window.open(response.data.Boleto_URL, "_blank");
-
-      // Verifica se a nova aba foi bloqueada pelo navegador
-      if (!novaAba || novaAba.closed || typeof novaAba.closed === "undefined") {
-        // Se a nova aba foi bloqueada, redireciona na mesma aba
-        window.location.href = response.data.Boleto_URL;
-      }
-
-      setGerol("1"); // Atualiza o estado gerol para indicar que o boleto foi gerado
-    } else {
-      console.error("Erro: Boleto_URL não encontrado na resposta da API.");
-      alert("Erro ao processar o pagamento. Verifique os dados e tente novamente.");
+    } catch (error) {
+      console.error("Erro ao verificar pagamento:", error);
     }
-  } catch (error) {
-    console.error("Erro ao enviar pagamento:", error);
-    alert("Erro ao processar o pagamento. Tente novamente mais tarde.");
-  }
-};
+  };
 
-// Função para calcular o peso total
- const calcularPesoTotal = () => {
-  return produtos.reduce((total, produto) => {
-    const pesoBruto = parseFloat(produto.PesoBruto) || 0.6; // Se PesoBruto for inválido, usa 0,6
-    return total + pesoBruto * produto.quantidade; // Peso total considerando a quantidade
-  }, 0);
+  const copiarCodigoPix = async () => {
+    try {
+      await navigator.clipboard.writeText(qrCodeBase64);
+      alert("Código PIX copiado para a área de transferência!");
+    } catch (error) {
+      console.error("Erro ao copiar o código PIX:", error);
+      alert("Erro ao copiar o código PIX. Tente novamente.");
+    }
+  };
 
-};
-  // Função para fechar o modal
+  const calcularPesoTotal = () => {
+    return produtos.reduce((total, produto) => {
+      const pesoBruto = parseFloat(produto.PesoBruto) || 0.6;
+      return total + pesoBruto * produto.quantidade;
+    }, 0);
+  };
+
   const handleClose = () => {
     setMostrarConfigurarCartao(false);
-  }; 
-   // Função para fechar o modal
-  const handlefechar = () => {
-    setMostrarCreditoLoja(false);
   };
   
   const handleRetirarNaLoja = (event) => {
     const checked = event.target.checked;
     setRetirarNaLoja(checked);
-    setMostrarCep(!checked); // Esconde o campo de CEP
-    setCepDesabilitado(checked); // Desabilita o campo de CEP se "Retirar na Loja" for marcado
+    setMostrarCep(!checked);
+    setCepDesabilitado(checked);
   };
-  // Função para salvar o cartão
+
   const handleSave = (dadosCartao) => {
     console.log("Cartão salvo:", dadosCartao);
     setMostrarConfigurarCartao(false);
   };
-    // Função para salvar o pagamento
-    const handleSalvarpagamento = (pagamento) => {
-      console.log("salvar pagamento:", pagamento);
-      setMostrarCreditoLoja(false);
-    };
 
-    const handlePagamentoSelecionado = (codigo) => {
-      setCodigoPagamento(codigo); // Armazena o código de pagamento selecionado
-    };
-     
-const calcularQtdeVolume = () => {
-  return produtos.reduce((total, produto) => {
-    return total + produto.quantidade; // Soma a quantidade de cada produto no carrinho
-  }, 0);
-};
+  const handlePagamentoSelecionado = (codigo) => {
+    setCodigoPagamento(codigo);
+  };
+   
+  const calcularQtdeVolume = () => {
+    return produtos.reduce((total, produto) => {
+      return total + produto.quantidade;
+    }, 0);
+  };
 
   const finalizarCompra = async () => {
-    
-// Verifica se a opção de retirar na loja foi escolhida
-if (retirarNaLoja) {
-  // Se for retirar na loja, não precisamos do CEP nem de calcular o frete
-  console.log("Produto retirado na loja");
-} else {
-  // Verificar se o CEP foi preenchido
-  if (!cepDestino || cepDestino.replace(/[^\d]/g, "").length !== 8) {
-    alert("Por favor, insira um CEP válido e calcule o frete antes de finalizar a compra.");
-    return;
-  }
-}
+    if (retirarNaLoja) {
+      console.log("Produto retirado na loja");
+    } else {
+      if (!cepDestino || cepDestino.replace(/[^\d]/g, "").length !== 8) {
+        alert("Por favor, insira um CEP válido e calcule o frete antes de finalizar a compra.");
+        return;
+      }
+    }
 
-  if (!codigoPagamento) {
-    alert("Selecione um método de pagamento antes de finalizar a compra.");
-    return;
-  }
+    if (!codigoPagamento) {
+      alert("Selecione um método de pagamento antes de finalizar a compra.");
+      return;
+    }
     
-    // Se o método de pagamento for PIX, envia a requisição ao RadServer
-    if (codigoPagamento === 7 && !pagamentoConfirmado) { // 7 é o código para PIX
+    if (codigoPagamento === 7 && !pagamentoConfirmado) {
       await enviarPagamentoPix();
-      return; // Não prossegue com a finalização da compra até o pagamento ser confirmado
+      return;
     }
   
-  console.log("Código do pagamento selecionado:", codigoPagamento);
-  
+    console.log("Código do pagamento selecionado:", codigoPagamento);
+    
     try {
       const itens = produtos.map((produto) => {
         const precoUnit = produto.preco.toFixed(2).replace(".", ",");
-        const desconto = produto.desconto || 0; // Adiciona o desconto, caso exista
+        const desconto = produto.desconto || 0;
         const totalItem = (produto.preco - desconto) * produto.quantidade;
         
         return {
@@ -255,24 +194,23 @@ if (retirarNaLoja) {
         };
       });
       
-      // Função para gerar o objeto financeiro com base no código de pagamento
       const gerarFinanceiro = (codigoPagamento) => {
         switch (codigoPagamento) {
           case 1: // Cartão de Débito
             return {
               TipoPg: codigoPagamento.toString(),
-              NSU: "98938378", // NSU fictício (substitua pelo valor real)
-              IDForPg: "478", // ID de forma de pagamento específico para Cartão de Débito
+              NSU: "98938378",
+              IDForPg: "478",
               Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0], // Data atual
+              DtVencimento: new Date().toISOString().split("T")[0],
               Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","), // Valor total formatado
+              vParcela: total.toFixed(2).replace(".", ","),
             };
           case 2: // Cartão de Crédito
             return {
               TipoPg: codigoPagamento.toString(),
               NSU: "98938378",
-              IDForPg: "477", // ID de forma de pagamento específico para Cartão de Crédito
+              IDForPg: "477",
               Qtde: "1",
               DtVencimento: new Date().toISOString().split("T")[0],
               Parcela: "1/1",
@@ -282,17 +220,17 @@ if (retirarNaLoja) {
             return {
               TipoPg: codigoPagamento.toString(),
               NSU: "98938378",
-              IDForPg: "479", // ID de forma de pagamento específico para Carteira
+              IDForPg: "479",
               Qtde: "1",
               DtVencimento: new Date().toISOString().split("T")[0],
               Parcela: "1/1",
               vParcela: total.toFixed(2).replace(".", ","),
             };
-          case 4: // Boleto
+          case 4: // Boleto (apenas marca como boleto, sem integração com API)
             return {
               TipoPg: codigoPagamento.toString(),
               NSU: "98938378",
-              IDForPg: "480", // ID de forma de pagamento específico para Boleto
+              IDForPg: "480",
               Qtde: "1",
               DtVencimento: new Date().toISOString().split("T")[0],
               Parcela: "1/1",
@@ -302,7 +240,7 @@ if (retirarNaLoja) {
             return {
               TipoPg: codigoPagamento.toString(),
               NSU: "98938378",
-              IDForPg: "508", // ID de forma de pagamento específico para Pix
+              IDForPg: "508",
               Qtde: "1",
               DtVencimento: new Date().toISOString().split("T")[0],
               Parcela: "1/1",
@@ -312,17 +250,7 @@ if (retirarNaLoja) {
             return {
               TipoPg: codigoPagamento.toString(),
               NSU: "98938378",
-              IDForPg: "486", // ID de forma de pagamento específico para Depósito
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          case 12: // Crédito
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "487", // ID de forma de pagamento específico para Crédito
+              IDForPg: "486",
               Qtde: "1",
               DtVencimento: new Date().toISOString().split("T")[0],
               Parcela: "1/1",
@@ -333,8 +261,7 @@ if (retirarNaLoja) {
         }
       };
 
-    // Gera o array de financeiro com base no código de pagamento
-    const financeiro = [gerarFinanceiro(codigoPagamento)];
+      const financeiro = [gerarFinanceiro(codigoPagamento)];
 
       const config = {
         method: "post",
@@ -365,7 +292,7 @@ if (retirarNaLoja) {
           TipoPg: codigoPagamento.toString(),
           StatusTransacao: "1",
           ValidarValor:"0",
-          TipoCliente: idPessoa ? "1" : "0",
+          TipoCliente: TipoCliente,
           Itens: itens,
           Financeiro: financeiro,
         },
@@ -377,15 +304,10 @@ if (retirarNaLoja) {
         alert(`Compra finalizada com sucesso! ID da Venda: ${response.data.Venda}`);
         console.log("Resposta da API:", response.data);
         
-        if (codigoPagamento === 4) {
-          await enviarPagamentoBoleto();
-        } 
-        // Zera o carrinho e redireciona para a tela inicial
         clearCart();
         navigate("/");
       } else {
-        // Corrigindo a referência ao erro
-        const mensagemErro = response.data.erro || "Erro desconhecido"; // Alterado para 'response'
+        const mensagemErro = response.data.erro || "Erro desconhecido";
         alert(`Erro ao processar a compra: ${mensagemErro}`);
         console.error("Erro na API:", response.data);
       }
@@ -396,25 +318,16 @@ if (retirarNaLoja) {
   };
 
   const handleMetodoPagamentoChange = (metodo) => {
-    console.log("ID Pessoa atual:", idPessoa); // Log para depuração
-    if (metodo === "CreditoLoja" && idPessoa === "223039") {
-      alert("Essa forma de pagamento está disponível apenas para clientes logados.");
-      return;
-    }
-  
+    console.log("ID Pessoa atual:", idPessoa);
     setMetodoPagamento(metodo);
     setMostrarConfigurarCartao(metodo === "Cartao");
-    setMostrarCreditoLoja(metodo === "CreditoLoja");
-  
-    // Definir o código de pagamento com base no método selecionado
+
     if (metodo === "Boleto") {
       setCodigoPagamento(4); // 4 é o código para Boleto
     } else if (metodo === "Pix") {
       setCodigoPagamento(7); // 7 é o código para PIX
     } else if (metodo === "Cartao") {
       setCodigoPagamento(2); // 2 é o código para Cartão de Crédito
-    } else if (metodo === "CreditoLoja") {
-      setCodigoPagamento(12); // 12 é o código para Crédito Loja
     }
   };
 
@@ -444,8 +357,8 @@ if (retirarNaLoja) {
       return;
     }
 
-    const pesoTotal = calcularPesoTotal(); // Peso total calculado aqui
-    const qtdeVolume = calcularQtdeVolume(); // Calcula a quantidade total de volume
+    const pesoTotal = calcularPesoTotal();
+    const qtdeVolume = calcularQtdeVolume();
         
     try {
       const config = {
@@ -461,7 +374,7 @@ if (retirarNaLoja) {
           CEPDestino: cepDestino.replace(/[^\d]/g, ""),
           ValorNFe: total.toFixed(2).replace(".", ","),
           QtdeVolume: qtdeVolume.toString(),
-          PesoBruto: pesoTotal.toFixed(2).replace(".", ","), // Peso total calculado
+          PesoBruto: pesoTotal.toFixed(2).replace(".", ","),
           Comprimento: "0",
           Altura: "0",
           Largura: "0",
@@ -514,7 +427,6 @@ if (retirarNaLoja) {
           <p className="pagamento-total">Total: R$ {total.toFixed(2).replace('.', ',')}</p>
           <p className="pagamento-total">Frete: R$ {valorFrete.toFixed(2).replace('.', ',')}</p>
           <p className="pagamento-total">Total com Frete: R$ {(total + valorFrete).toFixed(2).replace('.', ',')}</p>
-          {/* <p className="pagamento-prazo">Prazo de Entrega: {prazoEntrega} dias</p> */}
         </div>
 
         {/* Card de endereço */}
@@ -523,147 +435,111 @@ if (retirarNaLoja) {
          <div className="pagamento-retirar-loja">
          <label>
          <input
-  type="checkbox"
-  checked={retirarNaLoja}
-  onChange={handleRetirarNaLoja}
-/> Retirar na Loja
+           type="checkbox"
+           checked={retirarNaLoja}
+           onChange={handleRetirarNaLoja}
+         /> Retirar na Loja
          </label>
           </div>
           {mostrarCep && (
           <input
-           type="text"
+            type="text"
             placeholder="Digite o CEP de Destino"
-           value={cepDestino}
-           onChange={(e) => setCepDestino(e.target.value)}
-           disabled={cepDesabilitado}
-         className="pagamento-endereco-input"
+            value={cepDestino}
+            onChange={(e) => setCepDestino(e.target.value)}
+            disabled={cepDesabilitado}
+            className="pagamento-endereco-input"
           />
            )}
           
           {!retirarNaLoja && (
-  <>
-    <textarea
-      value={enderecoEntrega}
-      onChange={(e) => setEnderecoEntrega(e.target.value)}
-      className="pagamento-endereco-textarea"
-      placeholder="Endereço de entrega"
-    />
-    <input
-      type="text"
-      placeholder="Ponto de Referência"
-      value={pontoReferencia}
-      onChange={(e) => setPontoReferencia(e.target.value)}
-      className="pagamento-endereco-input"
-    />
-    <div className="pagamento-buttons-container">
-      <button
-        onClick={() => buscarEnderecoPorCep(cepDestino)}
-        className="pagamento-buscar-cep-btn"
-      >
-        Buscar Endereço
-      </button>
-      <button
-        onClick={calcularFrete}
-        className="pagamento-calcular-frete-btn"
-      >
-        Calcular Frete
-      </button>
-    </div>
-  </>
-)}
-      </div>
+            <>
+              <textarea
+                value={enderecoEntrega}
+                onChange={(e) => setEnderecoEntrega(e.target.value)}
+                className="pagamento-endereco-textarea"
+                placeholder="Endereço de entrega"
+              />
+              <input
+                type="text"
+                placeholder="Ponto de Referência"
+                value={pontoReferencia}
+                onChange={(e) => setPontoReferencia(e.target.value)}
+                className="pagamento-endereco-input"
+              />
+              <div className="pagamento-buttons-container">
+                <button
+                  onClick={() => buscarEnderecoPorCep(cepDestino)}
+                  className="pagamento-buscar-cep-btn"
+                >
+                  Buscar Endereço
+                </button>
+                <button
+                  onClick={calcularFrete}
+                  className="pagamento-calcular-frete-btn"
+                >
+                  Calcular Frete
+                </button>
+              </div>
+            </>
+          )}
+        </div>
           
         {/* Card de métodos de pagamento */}
         <div className="pagamento-card">
           <h3 className="pagamento-card-title">Forma de Pagamento</h3>
           <div className="pagamento-metodos">
-          <label>
+            <label>
               <input
                 type="radio"
                 name="metodoPagamento"
                 value="PIX"
                 onChange={() => {
-                  setCodigoPagamento(7); // 7 é o código para PIX
+                  setCodigoPagamento(7);
                   handleMetodoPagamentoChange("Pix");
                 }}
               />
               PIX
             </label>
-             {/* <label> 
+            <label>
               <input
                 type="radio"
                 name="metodoPagamento"
-                value="Cartão"
-                onChange={() => handleMetodoPagamentoChange("Cartao")}
+                value="Boleto"
+                onChange={() => handleMetodoPagamentoChange("Boleto")}
               />
-              Cartão
-            </label>*/}
-           <label>
-             <input
-               type="radio"
-               name="metodoPagamento"
-               value="Boleto"
-               onChange={() => handleMetodoPagamentoChange("Boleto")}
-             />
-               Boleto
+              Boleto
             </label>
-        <div>
-          <label>
-           <input
-            type="radio"
-            name="metodoPagamento"
-            value="CreditoLoja"
-            onChange={() => {
-            handleMetodoPagamentoChange("CreditoLoja")}}
-           />
-           Crédito Loja
-         </label>
-       </div>
 
-       {qrCodeBase64 && (
-  <div className="qr-code-container">
-    <h3>Escaneie o QR Code para pagar</h3>
-    <QRCodeCanvas value={qrCodeBase64} size={256} />
-    <p>Tempo restante: {contador} segundos</p>
-    {pagamentoConfirmado ? (
-      <p>Pagamento Confirmado!</p>
-    ) : (
-      <>
-        <p>Aguardando pagamento...</p>
-        <button onClick={copiarCodigoPix} className="copiar-pix-btn">
-          Copiar Código PIX
-        </button>
-      </>
-    )}
-  </div>
-)}
+            {qrCodeBase64 && (
+              <div className="qr-code-container">
+                <h3>Escaneie o QR Code para pagar</h3>
+                <QRCodeCanvas value={qrCodeBase64} size={256} />
+                <p>Tempo restante: {contador} segundos</p>
+                {pagamentoConfirmado ? (
+                  <p>Pagamento Confirmado!</p>
+                ) : (
+                  <>
+                    <p>Aguardando pagamento...</p>
+                    <button onClick={copiarCodigoPix} className="copiar-pix-btn">
+                      Copiar Código PIX
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
 
-            {metodoPagamento === "Cartão" &&  (
-        <button onClick={() => setMostrarConfigurarCartao(true)}>
-          Configurar Cartão
-        </button>
- 
-      )}
-       {mostrarcreditoloja === "CreditoLoja" && (
-        
-        <button onClick={() => setMostrarCreditoLoja(true)}>
-          Credito Loja
-        </button>
-      )}
+            {metodoPagamento === "Cartao" && (
+              <button onClick={() => setMostrarConfigurarCartao(true)}>
+                Configurar Cartão
+              </button>
+            )}
       
-      {mostrarcreditoloja && (
-        <FormadeCredito
-          onSave={handleSalvarpagamento}
-          onPagamentoSelecionado={handlePagamentoSelecionado}
-        />
-      )}
-
-      {mostrarConfigurarCartao && (
-        <ConfigurarCartao onClose={handleClose} onSave={handleSave} />
-      )}
+            {mostrarConfigurarCartao && (
+              <ConfigurarCartao onClose={handleClose} onSave={handleSave} />
+            )}
           </div>
         </div>
-
       </div>
 
       <button onClick={finalizarCompra} className="pagamento-finalizar-compra-btn">

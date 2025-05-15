@@ -23,55 +23,49 @@ export default function Registro() {
   const handleRegistro = async (e) => {
     e.preventDefault();
     setErro("");
-  
-    // Configuração da requisição
-    const config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://equilibrioapperp.pontalsistemas.com.br/serverecommerce/NovaPessoa",
-      headers: {
-        "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
-        
-      },
-      params: {
-        Grupo: "343",
-        Empresa: "682",
-        Token: "7QDLJV9OHHIJBHYGJM8Y",
-        CnpjCpf: cnpjCpf,
-        Nome: nome,
-        Contato: contato,
-        Endereco: logradouro,
-        Bairro: bairro,
-        Cidade: cidade,
-        Cep: cep,
-        UF: estado,
-        Email: email,
-        Numero: numero,
-        Complemento: complemento,
-        Ibge: ibge,
-        Telefone: telefone,
-        IE: "",
-        RazaoSocial: razaoSocial,
-      },
-    };
-  
-    try {
-      const response = await axios.request(config);
-  
-      // Log da resposta no console
-      console.log("Resposta da API:", response.data);
-  
-      if (response.data && response.data.ID) {
-        // Exibir mensagem informando que o cadastro deu certo
-        alert(`Cadastro Realizado com Sucesso. ID: ${response.data.ID}`);
-        navigate("/login"); // Redireciona para login após registro 
-      } else {
-        alert("Erro ao registrar verifique seus dados!");
-      }
 
+    try {
+      const response = await axios.post(
+        "https://equilibrioapperp.pontalsistemas.com.br/serverecommerce/NovaPessoa",
+        {
+          Grupo: "343",
+          Empresa: "682",
+          Token: "7QDLJV9OHHIJBHYGJM8Y",
+          CnpjCpf: cnpjCpf,
+          Nome: nome,
+          Contato: contato,
+          Endereco: logradouro,
+          Bairro: bairro,
+          Cidade: cidade,
+          Cep: cep,
+          UF: estado,
+          Email: email,
+          Numero: numero,
+          Complemento: complemento,
+          Ibge: ibge,
+          Telefone: telefone,
+          IE: "",
+          RazaoSocial: razaoSocial,
+        },
+        {
+          headers: {
+            "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Resposta da API:", response.data);
+
+      if (response.data && response.data.ID) {
+        alert(`Cadastro realizado com sucesso. ID: ${response.data.ID}`);
+        navigate("/login");
+      } else {
+        alert("Erro ao registrar, verifique seus dados!");
+      }
     } catch (error) {
       setErro("Erro ao registrar.");
-      console.error(error);
+      console.error("Erro na requisição:", error.response?.data || error.message);
     }
   };
 
@@ -128,7 +122,7 @@ export default function Registro() {
           type="text"
           placeholder="CNPJ/CPF"
           value={cnpjCpf}
-          onChange={(e) => setCnpjCpf(e.target.value.replace(/\D/g, ""))} // Remove caracteres não numéricos
+          onChange={(e) => setCnpjCpf(e.target.value.replace(/\D/g, ""))}
         />
         <input
           type="text"

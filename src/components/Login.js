@@ -10,12 +10,18 @@ export default function Login() {
   const [mensagem, setMensagem] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setTemCadastro, setNomeCliente, setFormasPagamento, setValorCredito } = useCadastro();
+  const { 
+    setTemCadastro, 
+    setNomeCliente, 
+    setFormasPagamento, 
+    setValorCredito, 
+    setParcelas 
+  } = useCadastro();
   const { setTipoCliente } = useTipoCliente();
 
   const limparCPF = (cpf) => cpf.replace(/\D/g, "");
 
-  const validarCPF = (cpf) => cpf && cpf.length >= 11; // Validação básica
+  const validarCPF = (cpf) => cpf && cpf.length >= 11;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +38,7 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://equilibrioapperp.pontalsistemas.com.br/serverecommerce/ConsultarCadastro",
+        "https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/ConsultarCadastro",
         {
           headers: {
             "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
@@ -47,7 +53,7 @@ export default function Login() {
         }
       );
 
-      // console.log("Resposta da API:", response.data);
+      console.log("Resposta da API:", response.data);
 
       if (response.data?.ID) {
         setMensagem("Você já possui cadastro.");
@@ -65,6 +71,14 @@ export default function Login() {
           deposito: response.data.Despito,
           pixCredito: response.data.PixCredito,
         });
+        
+        // Corrigido: Passando o array de parcelas corretamente
+        if (response.data.Parcelas && Array.isArray(response.data.Parcelas)) {
+          setParcelas(response.data.Parcelas);
+        } else {
+          setParcelas([]);
+        }
+        
         localStorage.setItem("userID", response.data.ID);
         navigate("/");
       } else {
@@ -72,6 +86,7 @@ export default function Login() {
       }
     } catch (error) {
       setErro("Erro ao verificar cadastro. Por favor, tente novamente.");
+      console.error("Erro na requisição:", error);
     } finally {
       setLoading(false);
     }

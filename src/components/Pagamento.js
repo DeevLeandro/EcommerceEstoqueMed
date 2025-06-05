@@ -2,23 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "./CartContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ConfigurarCartao from "./ConfigurarCartao";
-import { usePagamento } from "./PagamentoContext";
-import { useTipoCliente } from "./PrecoContext";
 import { QRCodeCanvas } from "qrcode.react";
+import { useTipoCliente } from "./PrecoContext";
+import { useCadastro } from "./CadastroContext";
 
 export default function Pagamento() {
   const { produtos, total, clearCart } = useCart();
   const [cepDestino, setCepDestino] = useState("");
   const [enderecoEntrega, setEnderecoEntrega] = useState("");
   const [pontoReferencia, setPontoReferencia] = useState("");
-  const [valorFrete, setValorFrete] = useState(0);
+  const [ValorFrete, setValorFrete] = useState(0);
   const [prazoEntrega, setPrazoEntrega] = useState("");
   const [metodoPagamento, setMetodoPagamento] = useState("");
-  const [mostrarConfigurarCartao, setMostrarConfigurarCartao] = useState(false);
   const [codigoPagamento, setCodigoPagamento] = useState(null);
   const [pagamentoConfirmado, setPagamentoConfirmado] = useState(false);
-  const [contador, setContador] = useState(60);
+  const [contador, setContador] = useState(1);
   const [qrCodeBase64, setQrCodeBase64] = useState("");
   const [paymentId, setPaymentId] = useState(null);
   const [mostrarCep, setMostrarCep] = useState(true);
@@ -27,6 +25,26 @@ export default function Pagamento() {
   const [cepDesabilitado, setCepDesabilitado] = useState(false);
   const navigate = useNavigate();
   const [idPessoa, setIdPessoa] = useState(localStorage.getItem("userID") || "223039");
+  const { parcelas } = useCadastro();
+  const [parcelaSelecionada, setParcelaSelecionada] = useState(null);
+  const [parcelasDisponiveis, setParcelasDisponiveis] = useState([]);
+
+  useEffect(() => {
+    if (parcelas && parcelas.length > 0) {
+      const parcelasFormatadas = parcelas.map(parcela => ({
+        numero: parseInt(parcela.QtdeParcelas),
+        intervalo: parseInt(parcela.Intervalor),
+        diasPrimeiraParcela: parseInt(parcela.QtdeDias),
+        idPagamento: parcela.IDPagamento
+      }));
+      
+      setParcelasDisponiveis(parcelasFormatadas);
+      setParcelaSelecionada(parcelasFormatadas[0]);
+    } else {
+      setParcelasDisponiveis([]);
+      setParcelaSelecionada(null);
+    }
+  }, [parcelas]);
 
   useEffect(() => {
     const verificarLogin = () => {
@@ -50,14 +68,14 @@ export default function Pagamento() {
   }, [qrCodeBase64, contador, pagamentoConfirmado]);
 
   const enviarPagamentoPix = async () => {
-    const produto = produtos[0]
+    const produto = produtos[0];
     try {
       const response = await axios.post("https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/MercadoPago", {
         Grupo: "343",
         Empresa: "682",
         Pessoa: idPessoa,
         Produto: produto.id,
-        ChaveAPI:"APP_USR-5998987835151881-031812-37e9788175d1c99a31553fa2f7870064-1319414806",
+        ChaveAPI: "APP_USR-5998987835151881-031812-37e9788175d1c99a31553fa2f7870064-1319414806",
         Valor: total.toFixed(2).replace(".", ","),
       }, {
         headers: {
@@ -93,7 +111,7 @@ export default function Pagamento() {
       }
       const response = await axios.post("https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/StatusPagamento", {
         payment_id: paymentId,
-        ChaveAPI:"APP_USR-5998987835151881-031812-37e9788175d1c99a31553fa2f7870064-1319414806",
+        ChaveAPI: "APP_USR-5998987835151881-031812-37e9788175d1c99a31553fa2f7870064-1319414806",
       }, {
         headers: {
           "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
@@ -131,30 +149,78 @@ export default function Pagamento() {
     }, 0);
   };
 
-  const handleClose = () => {
-    setMostrarConfigurarCartao(false);
-  };
-  
   const handleRetirarNaLoja = (event) => {
     const checked = event.target.checked;
     setRetirarNaLoja(checked);
     setMostrarCep(!checked);
+    setValorFrete(0);
     setCepDesabilitado(checked);
   };
 
-  const handleSave = (dadosCartao) => {
-    console.log("Cartão salvo:", dadosCartao);
-    setMostrarConfigurarCartao(false);
-  };
-
-  const handlePagamentoSelecionado = (codigo) => {
-    setCodigoPagamento(codigo);
-  };
-   
   const calcularQtdeVolume = () => {
     return produtos.reduce((total, produto) => {
       return total + produto.quantidade;
     }, 0);
+  };
+
+  const gerarFinanceiro = (codigoPagamento) => {
+    const hoje = new Date();
+    const formatarData = (date) => date.toISOString().split('T')[0];
+    const valorTotal = total + ValorFrete;
+
+    switch (codigoPagamento) {
+      case 4: // Boleto
+        if (!parcelaSelecionada) {
+          throw new Error("Nenhuma parcela selecionada");
+        }
+
+        const numeroParcelas = parcelaSelecionada.numero;
+        const valorBase = valorTotal / numeroParcelas;
+        const valorParcelaArredondado = Math.floor(valorBase * 100) / 100;
+        
+        const diferenca = valorTotal - (valorParcelaArredondado * numeroParcelas);
+        const diferencaArredondada = Math.round(diferenca * 100) / 100;
+
+        const parcelas = [];
+        let dataVencimento = new Date(hoje);
+        dataVencimento.setDate(dataVencimento.getDate() + parcelaSelecionada.diasPrimeiraParcela);
+
+        for (let i = 1; i <= numeroParcelas; i++) {
+          const valorFinal = i === numeroParcelas 
+            ? (valorParcelaArredondado + diferencaArredondada).toFixed(2).replace(".", ",")
+            : valorParcelaArredondado.toFixed(2).replace(".", ",");
+
+          parcelas.push({
+            TipoPg: codigoPagamento.toString(),
+            NSU: "98938378",
+            IDForPg: parcelaSelecionada.idPagamento,
+            Qtde: numeroParcelas.toString(),
+            DtVencimento: formatarData(dataVencimento),
+            Intervalo: parcelaSelecionada.intervalo.toString(),
+            Parcela: `${i}/${numeroParcelas}`,
+            vParcela: valorFinal,
+          });
+
+          dataVencimento = new Date(dataVencimento);
+          dataVencimento.setDate(dataVencimento.getDate() + parcelaSelecionada.intervalo);
+        }
+
+        return parcelas;
+
+      case 7: // Pix
+        return [{
+          TipoPg: codigoPagamento.toString(),
+          NSU: "98938378",
+          IDForPg: "508",
+          Qtde: "1",
+          DtVencimento: formatarData(hoje),
+          Parcela: "1/1",
+          vParcela: valorTotal.toFixed(2).replace(".", ","),
+        }];
+
+      default:
+        throw new Error("Código de pagamento inválido.");
+    }
   };
 
   const finalizarCompra = async () => {
@@ -176,8 +242,6 @@ export default function Pagamento() {
       await enviarPagamentoPix();
       return;
     }
-  
-    console.log("Código do pagamento selecionado:", codigoPagamento);
     
     try {
       const itens = produtos.map((produto) => {
@@ -187,85 +251,18 @@ export default function Pagamento() {
         
         return {
           IDProduto: produto.id,
-          Qtde: produto.quantidade,
+          Qtde: produto.quantidade.toString(),
           vUnt: precoUnit,
           vDesc: desconto.toFixed(2).replace(".", ","),
           vTotalItem: totalItem.toFixed(2).replace(".", ","),
+          vItemFrete: (ValorFrete / produtos.reduce((acc, p) => acc + p.quantidade, 0)).toFixed(2).replace(".", ","),
         };
       });
       
-      const gerarFinanceiro = (codigoPagamento) => {
-        switch (codigoPagamento) {
-          case 1: // Cartão de Débito
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "478",
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          case 2: // Cartão de Crédito
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "477",
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          case 3: // Carteira
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "479",
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          case 4: // Boleto (apenas marca como boleto, sem integração com API)
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "480",
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          case 7: // Pix
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "508",
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          case 10: // Depósito
-            return {
-              TipoPg: codigoPagamento.toString(),
-              NSU: "98938378",
-              IDForPg: "486",
-              Qtde: "1",
-              DtVencimento: new Date().toISOString().split("T")[0],
-              Parcela: "1/1",
-              vParcela: total.toFixed(2).replace(".", ","),
-            };
-          default:
-            throw new Error("Código de pagamento inválido.");
-        }
-      };
-
-      const financeiro = [gerarFinanceiro(codigoPagamento)];
+      const financeiro = gerarFinanceiro(codigoPagamento);
 
       const config = {
         method: "post",
-        maxBodyLength: Infinity,
         url: "https://equilibrioapperp.pontalsistemas.com.br/ServerEcommerce/NovaVenda",
         headers: {
           "X-Embarcadero-App-Secret": "DE1BA56B-43C5-469D-9BD2-4EB146EB8473",
@@ -276,14 +273,15 @@ export default function Pagamento() {
           Empresa: "682",
           Token: "7QDLJV9OHHIJBHYGJM8Y",
           IDPessoa: idPessoa,
-          IDVendedor: "223805",
-          IDTransp: "",
+          IDVendedor: "215469",
+          IDTransp: "215469",
+          vFrete: ValorFrete.toFixed(2).replace(".", ","),
           MovimentouEstoque: "0",
           LocalVenda: "1",
           TipoMovim: "1",
           EmiteNFCe: "0",
           vProduto: total.toFixed(2).replace(".", ","),
-          vNFe: total.toFixed(2).replace(".", ","),
+          vNFe: total.toFixed(2).replace('.', ','),
           TipoNFe: "1",
           PessoaEmpresa: "0",
           Troco: "0",
@@ -291,7 +289,7 @@ export default function Pagamento() {
           IDVenda: "0",
           TipoPg: codigoPagamento.toString(),
           StatusTransacao: "1",
-          ValidarValor:"0",
+          ValidarValor: "0",
           TipoCliente: TipoCliente,
           Itens: itens,
           Financeiro: financeiro,
@@ -302,32 +300,24 @@ export default function Pagamento() {
 
       if (response.data && response.data.Venda) {
         alert(`Compra finalizada com sucesso! ID da Venda: ${response.data.Venda}`);
-        console.log("Resposta da API:", response.data);
-        
         clearCart();
         navigate("/");
       } else {
         const mensagemErro = response.data.erro || "Erro desconhecido";
         alert(`Erro ao processar a compra: ${mensagemErro}`);
-        console.error("Erro na API:", response.data);
       }
     } catch (error) {
-      alert("Ocorreu um erro ao processar sua compra. Verifique os dados e tente novamente.");
       console.error("Erro ao finalizar compra:", error);
+      alert("Ocorreu um erro ao processar sua compra. Verifique os dados e tente novamente.");
     }
   };
 
   const handleMetodoPagamentoChange = (metodo) => {
-    console.log("ID Pessoa atual:", idPessoa);
     setMetodoPagamento(metodo);
-    setMostrarConfigurarCartao(metodo === "Cartao");
-
     if (metodo === "Boleto") {
-      setCodigoPagamento(4); // 4 é o código para Boleto
+      setCodigoPagamento(4);
     } else if (metodo === "Pix") {
-      setCodigoPagamento(7); // 7 é o código para PIX
-    } else if (metodo === "Cartao") {
-      setCodigoPagamento(2); // 2 é o código para Cartão de Crédito
+      setCodigoPagamento(7);
     }
   };
 
@@ -356,10 +346,10 @@ export default function Pagamento() {
       alert("Por favor, insira um CEP de destino válido.");
       return;
     }
-
+  
     const pesoTotal = calcularPesoTotal();
     const qtdeVolume = calcularQtdeVolume();
-        
+  
     try {
       const config = {
         method: "get",
@@ -381,21 +371,26 @@ export default function Pagamento() {
           Diamentro: "0",
         },
       };
-
+  
       const response = await axios.request(config);
-      const data = response.data;
-
-      console.log("Resposta completa da API de frete:", data);
-
-      const menorFrete = data.reduce((prev, curr) => {
-        return parseFloat(curr.Valor.replace(",", ".")) < parseFloat(prev.Valor.replace(",", ".")) ? curr : prev;
+  
+      if (!response.data?.length) {
+        alert("Não foi possível calcular o frete.");
+        return;
+      }
+  
+      const menorFrete = response.data.reduce((prev, curr) => {
+        const valorPrev = parseFloat(prev.Valor.replace(",", "."));
+        const valorCurr = parseFloat(curr.Valor.replace(",", "."));
+        return valorCurr < valorPrev ? curr : prev;
       });
-
-      setValorFrete(parseFloat(menorFrete.Valor.replace(",", ".")));
+  
+      const valorFreteNumerico = parseFloat(menorFrete.Valor.replace(",", "."));
+      setValorFrete(valorFreteNumerico);
       setPrazoEntrega(menorFrete.PrazoEntrega);
     } catch (error) {
       console.error("Erro ao calcular frete:", error);
-      alert("Erro ao calcular o frete. Tente novamente.");
+      alert("Erro ao calcular frete. Verifique o CEP e tente novamente.");
     }
   };
 
@@ -404,7 +399,6 @@ export default function Pagamento() {
       <h2 className="pagamento-title">Resumo do Pedido</h2>
       
       <div className="pagamento-cards-container">
-        {/* Card de produtos */}
         <div className="pagamento-card">
           <h3 className="pagamento-card-title">Produtos</h3>
           <div className="produtos-container">
@@ -421,36 +415,34 @@ export default function Pagamento() {
           </div>
         </div>
         
-        {/* Card de resumo */}
         <div className="pagamento-card">
           <h3 className="pagamento-card-title">Resumo Financeiro</h3>
           <p className="pagamento-total">Total: R$ {total.toFixed(2).replace('.', ',')}</p>
-          <p className="pagamento-total">Frete: R$ {valorFrete.toFixed(2).replace('.', ',')}</p>
-          <p className="pagamento-total">Total com Frete: R$ {(total + valorFrete).toFixed(2).replace('.', ',')}</p>
+          <p className="pagamento-total">Frete: R$ {ValorFrete.toFixed(2).replace('.', ',')}</p>
+          <p className="pagamento-total">Total com Frete: R$ {(total + ValorFrete).toFixed(2).replace('.', ',')}</p>
         </div>
 
-        {/* Card de endereço */}
         <div className="pagamento-card">
-         <h3 className="pagamento-card-title">Endereço de Entrega</h3>
-         <div className="pagamento-retirar-loja">
-         <label>
-         <input
-           type="checkbox"
-           checked={retirarNaLoja}
-           onChange={handleRetirarNaLoja}
-         /> Retirar na Loja
-         </label>
+          <h3 className="pagamento-card-title">Endereço de Entrega</h3>
+          <div className="pagamento-retirar-loja">
+            <label>
+              <input
+                type="checkbox"
+                checked={retirarNaLoja}
+                onChange={handleRetirarNaLoja}
+              /> Retirar na Loja
+            </label>
           </div>
           {mostrarCep && (
-          <input
-            type="text"
-            placeholder="Digite o CEP de Destino"
-            value={cepDestino}
-            onChange={(e) => setCepDestino(e.target.value)}
-            disabled={cepDesabilitado}
-            className="pagamento-endereco-input"
-          />
-           )}
+            <input
+              type="text"
+              placeholder="Digite o CEP de Destino"
+              value={cepDestino}
+              onChange={(e) => setCepDestino(e.target.value)}
+              disabled={cepDesabilitado}
+              className="pagamento-endereco-input"
+            />
+          )}
           
           {!retirarNaLoja && (
             <>
@@ -485,7 +477,6 @@ export default function Pagamento() {
           )}
         </div>
           
-        {/* Card de métodos de pagamento */}
         <div className="pagamento-card">
           <h3 className="pagamento-card-title">Forma de Pagamento</h3>
           <div className="pagamento-metodos">
@@ -494,10 +485,8 @@ export default function Pagamento() {
                 type="radio"
                 name="metodoPagamento"
                 value="PIX"
-                onChange={() => {
-                  setCodigoPagamento(7);
-                  handleMetodoPagamentoChange("Pix");
-                }}
+                checked={codigoPagamento === 7}
+                onChange={() => handleMetodoPagamentoChange("Pix")}
               />
               PIX
             </label>
@@ -506,10 +495,50 @@ export default function Pagamento() {
                 type="radio"
                 name="metodoPagamento"
                 value="Boleto"
+                checked={codigoPagamento === 4}
                 onChange={() => handleMetodoPagamentoChange("Boleto")}
               />
               Boleto
             </label>
+
+            {metodoPagamento === "Boleto" && parcelasDisponiveis.length > 0 && (
+              <div className="parcelamento-container">
+                <label>Número de Parcelas:</label>
+                <select
+                  value={parcelasDisponiveis.findIndex(p => p.numero === parcelaSelecionada?.numero)}
+                  onChange={(e) => {
+                    const selectedIndex = e.target.value;
+                    setParcelaSelecionada(parcelasDisponiveis[selectedIndex]);
+                  }}
+                  className="parcelamento-select"
+                >
+                  {parcelasDisponiveis.map((parcela, index) => {
+                    const dataVencimento = new Date();
+                    dataVencimento.setDate(dataVencimento.getDate() + parcela.diasPrimeiraParcela);
+                    
+                    // Cálculo correto para exibição
+                    const valorBase = (total + ValorFrete) / parcela.numero;
+                    const valorArredondado = Math.floor(valorBase * 100) / 100;
+                    const diferenca = (total + ValorFrete) - (valorArredondado * parcela.numero);
+                    
+                    return (
+                      <option key={`${parcela.numero}-${parcela.idPagamento}`} value={index}>
+                        {parcela.numero}x de R$ {valorArredondado.toFixed(2).replace('.', ',')} 
+                        {diferenca > 0 && ` (última parcela R$ ${(valorArredondado + diferenca).toFixed(2).replace('.', ',')})`}
+                        <br/>(1ª parcela: {dataVencimento.toLocaleDateString()})
+                      </option>
+                    );
+                  })}
+                </select>
+                
+                {parcelaSelecionada && parcelaSelecionada.numero > 1 && (
+                  <div className="parcelamento-info">
+                    <p>Intervalo entre parcelas: {parcelaSelecionada.intervalo} dias</p>
+                    <p>Primeira parcela em: {parcelaSelecionada.diasPrimeiraParcela} dias</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {qrCodeBase64 && (
               <div className="qr-code-container">
@@ -527,16 +556,6 @@ export default function Pagamento() {
                   </>
                 )}
               </div>
-            )}
-
-            {metodoPagamento === "Cartao" && (
-              <button onClick={() => setMostrarConfigurarCartao(true)}>
-                Configurar Cartão
-              </button>
-            )}
-      
-            {mostrarConfigurarCartao && (
-              <ConfigurarCartao onClose={handleClose} onSave={handleSave} />
             )}
           </div>
         </div>

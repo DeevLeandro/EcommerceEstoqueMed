@@ -53,8 +53,12 @@ export default function Navbar() {
     <div className="nav">
       <div className="inner-content">
         <Link to="/" onClick={handleHomeClick}>
-          <h1 className="logo" style={{ visibility: location.pathname === "/Produto" ? "hidden" : "visible" }}>
-            ESTOQUE<span>MED</span>
+        <h1 className="logo" style={{ visibility: location.pathname === "/Produto" ? "hidden" : "visible" }}>
+          <img 
+             src="/images/LOGO.png" 
+             alt="Ofertas de produtos" 
+             className="responsive-img" 
+              />
           </h1>
         </Link>
         <nav className={`${showMenu && "show"}`}>

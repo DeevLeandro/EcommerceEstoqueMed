@@ -6,7 +6,8 @@ export const CadastroProvider = ({ children }) => {
   const [temCadastro, setTemCadastro] = useState(false);
   const [nomeCliente, setNomeCliente] = useState("");
   const [formasPagamento, setFormasPagamento] = useState(null);
-  const [ValorCredito, setValorCredito] = useState(null);
+  const [parcelas, setParcelas] = useState([]); // Alterado para array
+  const [valorCredito, setValorCredito] = useState(null);
 
   useEffect(() => {
     localStorage.removeItem("temCadastro");
@@ -22,7 +23,9 @@ export const CadastroProvider = ({ children }) => {
         setNomeCliente,
         formasPagamento,
         setFormasPagamento,
-        ValorCredito,
+        parcelas,
+        setParcelas,
+        valorCredito,
         setValorCredito,
       }}
     >
